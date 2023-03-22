@@ -1,0 +1,40 @@
+.page{
+    width: 100vw;
+    height: 100vh;
+    .achieve {
+        left: 0PX;
+        top: 5.76PX;
+        width: 309PX;
+        height: 36.14PX;
+        border-radius: 8PX;
+        background: linear-gradient(208.63deg, rgba(57, 161, 247, 1) 0%, rgba(173, 172, 172, 1) 0%);
+        border: 1PX solid rgba(151, 151, 151, 1);
+        box-shadow: 0PX 2PX 15PX 0PX rgba(74, 144, 226, 0.6);
+        justify-content: space-between;
+        display: flex;
+        position: relative;
+        margin: 4PX auto;
+        line-height: 34.14PX;
+        padding: 0 10PX;
+        color: white;
+    
+        .arrow {
+            width: 17.51PX;
+            height: 17.5PX;
+            position: relative;
+            top: 8.25PX;
+        }
+    }
+    
+    .add {
+        position: sticky;
+        margin-top: 459PX;
+        bottom: 50PX;
+        width: 118PX;
+        height: 44PX;
+        border-radius: 45PX;
+        background: linear-gradient(208.63deg, rgba(57, 161, 247, 1) 0%, rgba(132, 191, 240, 1) 100%);
+        border: 1PX solid rgba(229, 229, 229, 1);
+        box-shadow: 0PX 2PX 15PX 0PX rgba(74, 144, 226, 0.6);
+    }
+}

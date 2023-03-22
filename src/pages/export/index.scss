@@ -1,0 +1,115 @@
+.form-wrap {
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .form-item {
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 35rpx;
+
+    .form-label {
+      width: 100%;
+      opacity: 0.6;
+      font-weight: 400;
+      letter-spacing: 0rpx;
+      color: rgba(64, 72, 82, 1);
+      text-align: left;
+      vertical-align: top;
+    }
+    .tags{
+      display: flex;
+      justify-content: space-evenly;
+    }
+    .form-inner {
+      position: relative;
+      width: 100%;
+      margin-top: 10rpx;
+    
+
+      .form-icon {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        right: 0;
+        width: 50rpx;
+        height: 50rpx;
+        // background-image: url(../../assets/feat.png);
+        background-repeat: no-repeat;
+        background-size: 100% 100%;
+      }
+    }
+
+    .form-divide {
+      width: 100%;
+      opacity: 0.2;
+      margin-top: 20rpx;
+      border: 0.5rpx solid rgba(151, 151, 151, 1);
+    }
+
+    .tag-wrap {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 35rpx;
+
+      .tag-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        .tag-color {
+          width: 120rpx;
+          height: 120rpx;
+          border-radius: 50%;
+          filter: grayscale(50%);
+
+          &.active {
+            filter: grayscale(0%);
+          }
+        }
+
+        .tag-labe1 {
+          margin-top: 35rpx;
+        }
+      }
+    }
+
+    .form-btn {
+      width: 100%;
+      height: 90rpx;
+      color: white;
+      border-radius: 56rpx;
+      background: linear-gradient(135deg,
+          rgba(255, 78, 84, 1) 0%,
+          rgba(255, 117, 105, 1) 100%);
+      box-shadow: 0px 3px 10px 0px rgba(255, 80, 85, 0.6);
+      margin-top: 35rpx;
+      text-align: center;
+      line-height: 90rpx;
+    }
+
+    .form-del {
+      margin-top: 30rpx;
+      color: #A6A6A6;
+    }
+  }
+}
+
+.title {
+  font-size: 22PX;
+  font-weight: 400;
+  letter-spacing: 0.36px;
+  line-height: 41px;
+  color: rgba(64, 72, 82, 1);
+  text-align: left;
+  vertical-align: top;
+  left: 36PX;
+  width: 90PX;
+  position: relative;
+  height: 41PX;
+}

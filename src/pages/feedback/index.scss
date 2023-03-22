@@ -1,0 +1,33 @@
+.feedback {
+    background: #fff;
+    width: 90%;
+    min-height: 80px;
+    padding: 0 30rpx;
+    height: 120PX;
+    margin: 10PX auto;
+    border: black solid  1PX;
+}
+
+.text {
+    left: 26PX;
+    top: 144PX;
+    width: 333PX;
+    height: 47PX;
+    opacity: 1;
+    /** 文本1 */
+    font-size: 16PX;
+    font-weight: 400;
+    letter-spacing: 0PX;
+    line-height: 0PX;
+    color: rgba(0, 0, 0, 1);
+    text-align: left;
+}
+
+.btn {
+    width: 97PX;
+    height: 31PX;
+    line-height: 31PX;
+    border-radius: 10PX;
+    background: rgba(42, 130, 228, 1);
+    border: 2px solid rgba(42, 130, 228, 1);
+}

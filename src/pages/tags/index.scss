@@ -1,0 +1,52 @@
+.divide {
+    width: 100%;
+    opacity: 0.2;
+    margin-top: 20rpx;
+    border: 0.5rpx solid rgba(151, 151, 151, 1);
+    margin-bottom: 20PX;
+}
+
+.achieveName {
+    position: relative;
+    width: 137PX;
+    height: 27PX;
+    opacity: 1;
+    /** 文本1 */
+    font-size: 18PX;
+    font-weight: 400;
+    letter-spacing: -0.58PX;
+    color: rgba(0, 0, 0, 1);
+    text-align: center;
+    margin: 0 auto;
+}
+
+.tag-item {
+    display: flex;
+    justify-content: space-evenly;
+    width: 90%;
+    margin: 15PX auto;
+    
+    .tag-color {
+        width: 30PX;
+        height: 30PX;
+        border-radius: 50%;
+        filter: grayscale(50%);
+    }
+
+    .delete {
+        width: 25PX;
+        height: 25PX;
+    }
+}
+
+.add {
+    position: sticky;
+    margin-top: 459PX;
+    bottom: 50PX;
+    width: 118PX;
+    height: 44PX;
+    border-radius: 45PX;
+    background: linear-gradient(208.63deg, rgba(57, 161, 247, 1) 0%, rgba(132, 191, 240, 1) 100%);
+    border: 1PX solid rgba(229, 229, 229, 1);
+    box-shadow: 0PX 2PX 15PX 0PX rgba(74, 144, 226, 0.6);
+}

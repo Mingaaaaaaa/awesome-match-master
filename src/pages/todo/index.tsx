@@ -1,10 +1,12 @@
-import { View, Text } from "@tarojs/components";
+import { View, Text, Picker } from "@tarojs/components";
 import Taro from "@tarojs/taro";
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import MemoryCard from "../../components/Memory/MemoryCard";
 import "./index.scss";
 
 function Todo() {
+  const [group, setGroup] = useState(0)
+  const groups = ['所有成就', '成就组1', '成就组3', '成就组2', '成就组4',]
   const plans = [
     {
       title: "论文发表",
@@ -158,7 +160,23 @@ function Todo() {
         </View>
         :
         <View>
-          <Text className='title1'>待做计划</Text>
+          <View className="header">
+            <Text className='title1'>待做计划</Text>
+            <Picker
+              className='select'
+              mode='selector'
+              range={groups}
+              onChange={(e) => {
+                console.log(e);
+                setGroup(Number(e.detail.value))
+              }}
+            >
+              当前：{groups[group]}
+              <View className="filter-icon"  ></View>
+            </Picker>
+          </View>
+
+
           {plans.map((val, index) => {
             return (
               <MemoryCard msg={val} key={index} color={colors[index]}></MemoryCard>

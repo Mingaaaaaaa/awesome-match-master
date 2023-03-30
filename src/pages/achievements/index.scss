@@ -1,6 +1,7 @@
-.page{
+.page {
     width: 100vw;
     height: 100vh;
+
     .achieve {
         left: 0PX;
         top: 5.76PX;
@@ -17,15 +18,21 @@
         line-height: 34.14PX;
         padding: 0 10PX;
         color: white;
-    
+
+        .team-name {
+            position: relative;
+            top: 5.5PX;
+        }
+
         .arrow {
             width: 17.51PX;
             height: 17.5PX;
             position: relative;
             top: 8.25PX;
         }
+
     }
-    
+
     .add {
         position: sticky;
         margin-top: 459PX;

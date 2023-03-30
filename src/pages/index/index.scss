@@ -1,3 +1,33 @@
+.index {
+    .header {
+        display: flex;
+        margin: 0 auto;
+        width: 90%;
+
+        .search {
+            display: flex;
+            width: 150PX;
+            margin-left: 6PX;
+            .search-input{
+                margin-left: 5PX;
+            }
+        }
+
+        .select {
+            position: absolute;
+            right: 22PX;
+            .filter-icon {
+                display: inline-block;
+                background-image: url(../../assets/filter.png);
+                height: 18PX;
+                width: 17PX;
+                background-repeat: no-repeat;
+                background-size: 100% 100%;
+            }
+        }
+    }
+}
+
 .btns {
     display: flex;
     position: sticky;
@@ -10,8 +40,7 @@
         width: 110PX;
         height: 56PX;
         border-radius: 28PX;
-        background: linear-gradient(135deg, rgba(255, 78, 84, 1) 0%, rgba(255, 117, 105, 1) 100%);
-        box-shadow: 0px 3px 10px 0px rgba(255, 80, 85, 0.6);
+        background: linear-gradient(135deg, #efdada, #fff2f2);
         line-height: 56PX;
     }
 
@@ -21,14 +50,9 @@
         width: 56PX;
         height: 56PX;
         border-radius: 56PX;
-        color: white;
         font-size: 48rpx;
-        line-height: 120rpx;
+        line-height: 56PX;
         text-align: center;
-        background: linear-gradient(135deg,
-                rgba(255, 78, 84, 1) 0%,
-                rgba(255, 117, 105, 1) 100%);
-        border: 2rpx solid rgba(255, 80, 85, 1);
-        box-shadow: 0rpx 20rpx 40rpx 0rpx rgba(255, 80, 85, 0.3);
+        background: linear-gradient(135deg, #efdada, #fff2f2);
     }
 }

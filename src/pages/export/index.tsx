@@ -10,85 +10,128 @@ function Export() {
   const [name, setName] = useState("");
   const [remarks, setRemarks] = useState("");
   const [ddl, setDdl] = useState(today);
-  const achievements = ["A", "B", "C"]
+  const achievements = ["A", "B", "C"];
   const [achievement, setAchievement] = useState(0);
   const [selTag, setSelTag] = useState(0);
+  const exportRecord = () => {
+    //16
+    // Taro.request({
+    //   url: "http://124.222.4.79:3310/api/export/intro",
+    //   method: "POST",
+    //   header: {
+    //     token: token,
+    //   },
+    //   data: {
+    //     type: "文本",
+    //     start_time: "2022-01-01",
+    //     end_time: "2024-01-01",
+    //     choice: [{ team_id: 3, labels: [25] }],
+    //     inclusion: [1, 2, 3, 4],
+    //     order: 1,
+    //     user_id: 1,
+    //   },
+    // });
+  };
   return (
     <Fragment>
-      <Text className='title'>记忆导出</Text>
-      <View className='form-wrap'>
-        <View className='form-item'>
-          <Text className='form-label'>导出类型</Text>
-          <View className='form-inner'>
+      <Text className="title">记忆导出</Text>
+      <View className="form-wrap">
+        <View className="form-item">
+          <Text className="form-label">导出类型</Text>
+          <View className="form-inner">
             <Picker
-              mode='selector'
+              mode="selector"
               range={["文字导出", "图片导出", "文件导出"]}
               value={0}
-              onChange={(e) => { console.log(e.currentTarget); }}
+              onChange={(e) => {
+                console.log(e.currentTarget);
+              }}
             >
               asdsa
             </Picker>
-            <View className='form-icon'></View>
+            <View className="form-icon"></View>
           </View>
-          <View className='form-divide'></View>
+          <View className="form-divide"></View>
         </View>
-        <View className='form-item'>
-          <Text className='form-label'>日期约束</Text>
-          <View className='form-inner'>
-            <Picker mode='time' value={ddl} onChange={(e) => { setDdl(e.detail.value); }}>
+        <View className="form-item">
+          <Text className="form-label">日期约束</Text>
+          <View className="form-inner">
+            <Picker
+              mode="time"
+              value={ddl}
+              onChange={(e) => {
+                setDdl(e.detail.value);
+              }}
+            >
               {ddl}
               <View
-                className='form-icon'
+                className="form-icon"
                 style={{
                   backgroundImage: `url(${calendarIcon})`,
                 }}
               ></View>
             </Picker>
-
           </View>
-          <View className='form-divide'></View>
+          <View className="form-divide"></View>
         </View>
-        <View className='form-item'>
-          <Text className='form-label'>成就组与标签选择</Text>
-          <View className='form-inner'>
+        <View className="form-item">
+          <Text className="form-label">成就组与标签选择</Text>
+          <View className="form-inner">
             <Picker
-              mode='multiSelector'
-              range={[["成就组1", "成就组2", "成就组3", "成就组4"], ["标签1", "标签2", "标签3", "标签4",]]}
+              mode="multiSelector"
+              range={[
+                ["成就组1", "成就组2", "成就组3", "成就组4"],
+                ["标签1", "标签2", "标签3", "标签4"],
+              ]}
               value={0}
-              onChange={() => { console.log("object"); }}
-            >asdasasd</Picker>
-            <View className='form-icon'></View>
+              onChange={() => {
+                console.log("object");
+              }}
+            >
+              asdasasd
+            </Picker>
+            <View className="form-icon"></View>
           </View>
-          <View className='form-divide'></View>
+          <View className="form-divide"></View>
         </View>
-        <View className='form-item'>
-          <Text className='form-label'>格式选择</Text>
-          <View className='form-inner tags'>
-            <Checkbox value='hasDate'>日期</Checkbox>
-            <Checkbox value='hasAchi'>成就组</Checkbox>
-            <Checkbox value='hasTag'>标签</Checkbox>
-            <Checkbox value='hasSummary' checked>简介</Checkbox>
+        <View className="form-item">
+          <Text className="form-label">格式选择</Text>
+          <View className="form-inner tags">
+            <Checkbox value="hasDate">日期</Checkbox>
+            <Checkbox value="hasAchi">成就组</Checkbox>
+            <Checkbox value="hasTag">标签</Checkbox>
+            <Checkbox value="hasSummary" checked>
+              简介
+            </Checkbox>
           </View>
-          <View className='form-divide'></View>
+          <View className="form-divide"></View>
         </View>
-        <View className='form-item'>
-          <View className='form-label'>排序方式</View>
-          <View className='tag-wrap'>
+        <View className="form-item">
+          <View className="form-label">排序方式</View>
+          <View className="tag-wrap">
             <Picker
               range={[1, 2, 3, 4]}
-              onChange={() => { console.log("asd"); }}
-            >asdasda</Picker>
+              onChange={() => {
+                console.log("asd");
+              }}
+            >
+              asdasda
+            </Picker>
           </View>
-          <View className='form-divide'></View>
+          <View className="form-divide"></View>
         </View>
-        <View className='form-item'>
-          <View className='form-btn' onClick={() => { console.log(name, remarks, ddl, achievement, selTag); }}>
+        <View className="form-item">
+          <View
+            className="form-btn"
+            onClick={() => {
+              console.log(name, remarks, ddl, achievement, selTag);
+            }}
+          >
             导出
           </View>
         </View>
       </View>
-    </Fragment >
-
+    </Fragment>
   );
 }
 

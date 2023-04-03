@@ -1,120 +1,277 @@
-import { View, Image, Input, Button, PageContainer } from "@tarojs/components";
-import { useEffect, useState } from "react";
+import { View, Image, Input, Button } from "@tarojs/components";
+import Taro, { useRouter } from "@tarojs/taro";
+import { useEffect, useRef, useState } from "react";
 import ColorPicker from "./components/ColorPicker";
 import "./index.scss";
 
 function Tags() {
+  const teamId = useRouter().params.id;
   const [isShow, setIsShow] = useState(false);
-  const [tags, setTags] = useState([
-    {
-      id: 0,
-      label: "High",
-      background:
-        "linear-gradient(208.63deg, rgba(247, 57, 95, 1) 0%, rgba(245, 34, 34, 1) 100%)",
-    },
-    {
-      id: 1,
-      label: "Medium",
-      background:
-        "linear-gradient(135deg, rgba(66, 166, 237, 1) 0%, rgba(42, 130, 228, 1) 100%)",
-    },
-    {
-      id: 2,
-      label: "Low",
-      background:
-        "linear-gradient(135deg, rgba(255, 171, 134, 1) 0%, rgba(255, 217, 105, 1) 100%)",
-    },
-  ]);
+  const [tags, setTags] = useState([]);
+  const [changeTagIndex, setChangeTageIndex] = useState();
   const [changeTagId, setChangeTageId] = useState();
+  const [teamName, setTeamName] = useState("");
+  const [f5, setF5] = useState(false);
+  const token = useRef("");
+  const userId = useRef("");
   useEffect(() => {
-    //7
-    // Taro.request({
-    //   url: "http://124.222.4.79:3310/api/label/findLabelByTeam",
-    //   method: "GET",
-    //   header: {
-    //     token: token,
-    //   },
-    //   data: {
-    //     team1_id: 3,
-    //   },
-    // });
-  });
-  const deleteTag = () => {
-    // //9
-    // Taro.request({
-    //   url: "http://124.222.4.79:3310/api/label/delLabel",
-    //   method: "GET",
-    //   header: {
-    //     token: token,
-    //   },
-    //   data: {
-    //     label_id: 1,
-    //   },
-    // });
+    //  7
+    console.log(teamId);
+    Taro.getStorage({
+      key: "token",
+      success: (res) => {
+        token.current = res.data;
+        Taro.request({
+          url: "http://124.222.4.79:3310/api/label/findLabelByTeam",
+          method: "GET",
+          header: {
+            token: res.data,
+          },
+          data: {
+            team1_id: teamId,
+          },
+          success: (res1) => {
+            console.log(res1);
+            setTags(res1.data.data);
+          },
+        });
+
+        //3 findTeamById
+        Taro.request({
+          url: "http://124.222.4.79:3310/api/team/findTeamById",
+          method: "GET",
+          header: {
+            token: res.data,
+          },
+          data: {
+            team1_id: teamId,
+          },
+          success: (res3) => {
+            userId.current = res3.data.data.user_id;
+            setTeamName(res3.data.data.name);
+          },
+        });
+      },
+    });
+  }, []);
+  const deleteTag = (deleIndex) => {
+    //9
+    Taro.request({
+      url: "http://124.222.4.79:3310/api/label/delLabel",
+      method: "GET",
+      header: {
+        token: token.current,
+      },
+      data: {
+        label_id: tags[deleIndex].id,
+      },
+      success: () => {
+        Taro.showToast({
+          title: "删除成功",
+          icon: "success",
+          duration: 700,
+        });
+      
+      },
+    });
+    setTags((pre) => {
+      pre.splice(deleIndex, 1);
+      return pre;
+    });
+    setF5(!f5);
   };
-  const handleTag = () => {
-    // //5  add label
-    // Taro.request({
-    //   url: "http://124.222.4.79:3310/api/label/addLabel",
-    //   method: "GET",
-    //   header: {
-    //     token: token,
-    //   },
-    //   data: {
-    //     color: "green",
-    //     name: "论文撰写1",
-    //     team1: 3,
-    //   },
-    // });
-    
-    //6  update label
-    // Taro.request({
-    //   url: "http://124.222.4.79:3310/api/label/updateLabel",
-    //   method: "POST",
-    //   header: {
-    //     token: token,
-    //   },
-    //   data: {
-    //     id: 24,
-    //     color: "green",
-    //     name: "论文撰写111",
-    //     team1: 3,
-    //     user_id:1
-    //   },
-    // });
+  const handleTag = (index, name = tags[index].name) => {
+    console.log(tags[index]);
+    console.log(name);
+    if (name) {
+      if (tags[index].id == -1) {
+        // 5  add label
+        Taro.request({
+          url: "http://124.222.4.79:3310/api/label/addLabel",
+          method: "GET",
+          header: {
+            token: token.current,
+          },
+          data: {
+            color: tags[index].color,
+            name: name,
+            team1: teamId,
+          },
+          success: () => {
+            setTags((pre) => {
+              pre[index].id = 0;
+              return pre;
+            });
+          },
+        });
+      } else {
+        // 6  update label
+        Taro.request({
+          url: "http://124.222.4.79:3310/api/label/updateLabel",
+          method: "POST",
+          header: {
+            token: token.current,
+          },
+          data: {
+            id: tags[index].id,
+            color: tags[index].color,
+            name: name,
+            team1: teamId,
+            user_id: userId.current,
+          },
+        });
+      }
+    }
+  };
+  const handleTeam = (id: string, name: string) => {
+    //1 updateteam
+    Taro.request({
+      url: "http://124.222.4.79:3310/api/team/updateTeam",
+      method: "POST",
+      header: {
+        token: token.current,
+      },
+      data: {
+        id: id,
+        name: name,
+        user_id:userId.current
+      },
+      success: (res3) => {
+        if (res3.data.code == 0) {
+          Taro.showToast({
+            title: "更新成功",
+            icon: "success",
+            duration: 1000,
+          });
+        } else {
+          Taro.showToast({
+            title: res3.data.msg,
+            icon: "error",
+            duration: 1000,
+          });
+        }
+      },
+    });
+
+    // console.log(id + name);
+    // console.log(ids);
+    // if (!ids.current.includes(Number(id))) {
+    //   //1 addteam
+    //   Taro.request({
+    //     url: "http://124.222.4.79:3310/api/team/addTeam",
+    //     method: "GET",
+    //     header: {
+    //       token: token.current,
+    //     },
+    //     data: {
+    //       name: name,
+    //     },
+    //     success: (res3) => {
+    //       if (res3.data.code == 0) {
+    //         Taro.showToast({
+    //           title: "添加成功",
+    //           icon: "success",
+    //           duration: 1000,
+    //         });
+    //       } else {
+    //         Taro.showToast({
+    //           title: res3.data.msg,
+    //           icon: "error",
+    //           duration: 1000,
+    //         });
+    //       }
+    //     },
+    //   });
+    // } else {
+    // }
+  };
+  const deleteTeam = () => {
+    console.log(tags);
+    // 4  delTeam
+    Taro.request({
+      url: "http://124.222.4.79:3310/api/team/delTeam",
+      method: "GET",
+      header: {
+        token: token.current,
+      },
+      data: {
+        team1_id: teamId,
+      },
+      success: () => {
+        Taro.showToast({
+          title: "删除成功",
+          icon: "success",
+          duration: 1000,
+        });
+        setTimeout(() => {
+          Taro.navigateTo({ url: "/pages/achievements/index" });
+        }, 700);
+      },
+    });
   };
   return (
-    <View>
-      <Input className="achieveName" value="论文"></Input>
+    <View className="wrap">
+      <Input
+        className="achieveName"
+        value={teamName}
+        onBlur={(e) => {
+          handleTeam(teamId, e.detail.value);
+        }}
+      ></Input>
       <View className="divide"></View>
-      {tags.map((item, index) => {
-        return (
-          <View className="tag-item" key={index}>
-            <View
-              id={item.id.toString()}
-              key={index}
-              className="tag-color"
-              style={{ background: `${item.background}` }}
-              onClick={(e) => {
-                setIsShow(true);
-                console.log(e.mpEvent.target.id);
-                setChangeTageId(e.mpEvent.target.id);
-              }}
-            ></View>
-            <Input className="tag-name" value={item.label}></Input>
-            <Image
-              className="delete"
-              src="../../assets/delete.png"
-              onClick={deleteTag()}
-            ></Image>
-          </View>
-        );
-      })}
+      <View className="tags-wrap">
+        {tags.map((item, index) => {
+          return (
+            <View className="tag-item" key={index}>
+              <View
+                id={item.id}
+                key={index}
+                className="tag-color"
+                style={{ background: `${item.color}` }}
+                onClick={(e) => {
+                  setIsShow(true);
+                  console.log(index);
+                  setChangeTageIndex(index);
+                  setChangeTageId(item.id);
+                }}
+              ></View>
+              <Input
+                className="tag-name"
+                value={item.name}
+                id={index}
+                placeholder="输入标签名称"
+                onBlur={(e) => {
+                  console.log(e);
+                  console.log(tags);
+                  setTags((pre) => {
+                    pre[e.mpEvent.target.id].name = e.detail.value;
+                    return pre;
+                  });
+                  handleTag(e.mpEvent.target.id, e.detail.value);
+                  // handleTag(tags[e.mpEvent.target.id].color, e.detail.value);
+                }}
+              ></Input>
+              <Image
+                id={index}
+                className="delete"
+                src="../../assets/delete.png"
+                onClick={(e) => {
+                  deleteTag(e.mpEvent.target.id);
+                }}
+              ></Image>
+            </View>
+          );
+        })}
+      </View>
+
       <ColorPicker
         show={isShow}
         setIsShow={setIsShow}
         setTags={setTags}
-        changeTagId={changeTagId}
+        changeTagIndex={changeTagIndex}
+        teamId={teamId}
+        tagId={changeTagId}
+        handleTag={handleTag}
       />
       <Button
         className="add"
@@ -123,10 +280,9 @@ function Tags() {
             return [
               ...pre,
               {
-                id: pre.length,
-                label: "请输入标签名称",
-                background:
-                  " linear-gradient(135deg, rgba(255, 171, 134, 1) 0%, rgba(229, 229, 229, 1) 0%);",
+                id: -1,
+                name: "",
+                color: "#D9C8B6",
               },
             ];
           });
@@ -134,6 +290,9 @@ function Tags() {
       >
         新建
       </Button>
+      <View className="delete-team" onClick={deleteTeam}>
+        删除该成就组
+      </View>
     </View>
   );
 }

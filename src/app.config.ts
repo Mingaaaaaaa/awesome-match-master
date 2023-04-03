@@ -5,7 +5,6 @@ export default defineAppConfig({
     'pages/profile/index',//我的
     'pages/add/index',//新增 计划/回忆 
     'pages/edit/index',//修改 计划/回忆 
-    'pages/login/index',
     'pages/feedback/index',
     'pages/achievements/index',
     'pages/tags/index',

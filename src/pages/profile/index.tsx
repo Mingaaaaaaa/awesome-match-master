@@ -2,7 +2,6 @@ import Taro from "@tarojs/taro";
 import { Button, View } from "@tarojs/components";
 import "./index.scss";
 import { useEffect, useState } from "react";
-import { clearStorage } from "@tarojs/taro-h5";
 
 function Profile() {
   var token;
@@ -16,7 +15,7 @@ function Profile() {
       key: "token",
       success: function (res) {
         setIsLogin(true);
-        token = res;
+        token = res.data;
       },
       fail: function () {
         setIsLogin(false);
@@ -34,7 +33,7 @@ function Profile() {
       Taro.showToast({
         title: "退出成功",
         icon: "success",
-        duration: 2000,
+        duration: 1000,
       });
     } else {
       Taro.getUserProfile({
@@ -45,6 +44,7 @@ function Profile() {
           delete userInfo.userInfo.is_demote;
           Taro.login({
             success: (res1) => {
+              console.log(res1.code);
               Taro.request({
                 url: "http://124.222.4.79:3310/api/user/login",
                 method: "POST",
@@ -66,6 +66,7 @@ function Profile() {
                   // user_info: userInfo.userInfo,
                 },
                 success: (res2) => {
+                  setIsLogin(true)
                   console.log(res2);
                   try {
                     Taro.setStorageSync("token", res2.data.data);
@@ -73,35 +74,16 @@ function Profile() {
                     Taro.showToast({
                       title: "出错了",
                       icon: "error",
-                      duration: 2000,
+                      duration: 1000,
                     });
                   }
                   Taro.showToast({
                     title: "登录成功",
                     icon: "success",
-                    duration: 2000,
+                    duration: 1000,
                   });
-
-                  // //8   find all label
-                  // Taro.request({
-                  //   url: "http://124.222.4.79:3310/api/label/findLabelAll",
-                  //   method: "GET",
-                  //   header: {
-                  //     token: token,
-                  //   },
-                  // });
-
-                  //10
-                  // Taro.request({
-                  //   url: "http://124.222.4.79:3310/api/label/detailLabel",
-                  //   method: "GET",
-                  //   header: {
-                  //     token: token,
-                  //   },
-                  //   data: {
-                  //     label_id: 22,
-                  //   },
-                  // });
+                  setTimeout(()=>{Taro.reLaunch({url:'/pages/index/index'})},1000)
+               
 
                   // //14
                   // Taro.request({
@@ -135,7 +117,7 @@ function Profile() {
             style={{ backgroundImage: `url(${avatarUrl})` }}
           />
         </View>
-        <text>今天也是元气满满的一天哦!</text>
+        <text>{isLogin?'今天也是元气满满的一天哦!':'点击获取头像'}</text>
       </View>
       <View className="bottom-wrap">
         {/* <View className='bottom-item'>

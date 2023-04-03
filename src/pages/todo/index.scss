@@ -92,6 +92,9 @@
     top: 8PX;
 
     .filter-icon {
+      position: relative;
+      top: 5px;
+      margin-left: 5PX;
       display: inline-block;
       background-image: url(../../assets/filter.png);
       height: 18PX;
@@ -100,4 +103,7 @@
       background-size: 100% 100%;
     }
   }
+}
+.wrap{
+  min-height: 86vh;
 }

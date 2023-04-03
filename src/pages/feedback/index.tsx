@@ -1,22 +1,43 @@
 import { View, Text, Textarea } from "@tarojs/components";
 import Taro from "@tarojs/taro";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./index.scss";
 
 function Feedback() {
+  const [token, setToken] = useState("");
+
   const [feedback, setFeedback] = useState("");
+  useEffect(() => {
+    Taro.getStorage({
+      key: "token",
+      success: (res) => {
+        setToken(res.data);
+      },
+    });
+  }, []);
+
   const addFeedback = () => {
-    // //15
-    // Taro.request({
-    //   url: "http://124.222.4.79:3310/api/feedback/addFeedback",
-    //   method: "POST",
-    //   header: {
-    //     token: token,
-    //   },
-    //   data: {
-    //     detail:"没米"
-    //   },
-    // });
+    //15
+    Taro.request({
+      url: "http://124.222.4.79:3310/api/feedback/addFeedback",
+      method: "POST",
+      header: {
+        token: token,
+      },
+      data: {
+        detail: feedback,
+      },
+      success:(res)=>{
+        if(res.data.code==0){
+          Taro.showToast({
+            title: res.data.data,
+            icon: "success",
+            duration: 700,
+          });
+        }
+        setFeedback("")
+      }
+    });
   };
   return (
     <View>
@@ -30,7 +51,7 @@ function Feedback() {
       <button
         className="btn"
         onClick={() => {
-          console.log("提交" + feedback);
+          addFeedback();
         }}
       >
         提交

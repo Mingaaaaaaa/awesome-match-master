@@ -1,191 +1,157 @@
+/* eslint-disable jsx-quotes */
 import { View, Text, Picker } from "@tarojs/components";
 import Taro from "@tarojs/taro";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import MemoryCard from "../../components/Memory/MemoryCard";
+import { formatDate } from "../../utils/index";
 import "./index.scss";
 
 function Todo() {
-  const [group, setGroup] = useState(0)
-  const groups = ['所有成就', '成就组1', '成就组3', '成就组2', '成就组4',]
-  const plans = [
-    {
-      title: "论文发表",
-      details: {
-        airtime: "7月9日",
-        deadline: "7月9日",
-        group: "科研",
-        tag: "论文发表",
-        description:
-          "2022年7月8日论文被SCI期刊接收，IF=1，从投稿到接收历时六个月。",
+  const today = formatDate(new Date());
+  const [records, setRecords] = useState([{ endTime: " " }]);
+  const [groupIndex, setGroupIndex] = useState(0);
+  const [groupNames, setGroupNames] = useState(["ALL"]);
+  const groups = useRef([{ name: "All", id: 0 }]);
+  const token = useRef();
+  useEffect(() => {
+    Taro.getStorage({
+      key: "token",
+      success: function (res) {
+        token.current = res.data;
+        getRecords(1, 100, []);
+        //2  find allteam
+        Taro.request({
+          url: "http://124.222.4.79:3310/api/team/findTeamAll",
+          method: "GET",
+          header: { token: res.data },
+          success: (res1: any) => {
+            console.log(res1);
+            Taro.setStorage({
+              key: "user_id",
+              data: res1.data.data[0].user_id,
+            });
+            groups.current.push.apply(groups.current, res1.data.data);
+            setGroupNames(groups.current.map((i) => i.name));
+            console.log(groups.current);
+          },
+          fail: () => {
+            Taro.showToast({
+              title: "获取成就组失败",
+              icon: "error",
+              duration: 2000,
+            });
+          },
+        });
       },
-    },
-    {
-      title: "论文发表",
-      details: {
-        airtime: "7月9日",
-        deadline: "7月9日",
-        group: "科研",
-        tag: "论文发表",
-        description:
-          "2022年7月8日论文被SCI期刊接收，IF=1，从投稿到接收历时六个月。",
+      fail: function () {
+        Taro.showToast({
+          title: "请先登录",
+          icon: "error",
+          duration: 2000,
+        });
+        setTimeout(() => {
+          Taro.switchTab({ url: "/pages/profile/index" });
+        }, 1000);
       },
-    },
-    {
-      title: "论文发表",
-      details: {
-        airtime: "7月9日",
-        deadline: "7月9日",
-        group: "科研",
-        tag: "论文发表",
-        description:
-          "2022年7月8日论文被SCI期刊接收，IF=1，从投稿到接收历时六个月。",
+    });
+  }, []);
+
+  const getRecords = (page: number, size: number, teams: Array<number>) => {
+    //8   find all records
+    Taro.request({
+      url: "http://124.222.4.79:3310/api/record/findRecord",
+      method: "GET",
+      header: { token: token.current },
+      data: {
+        page: page,
+        size: size,
+        start_time: today,
+        end_time: "2032-01-01",
+        teams: teams,
       },
-    },
-    {
-      title: "论文发表",
-      details: {
-        airtime: "7月9日",
-        deadline: "7月9日",
-        group: "科研",
-        tag: "论文发表",
-        description:
-          "2022年7月8日论文被SCI期刊接收，IF=1，从投稿到接收历时六个月。",
+      success: (res1) => {
+        setRecords(res1.data.data.current_data);
       },
-    },
-    {
-      title: "论文发表",
-      details: {
-        airtime: "7月9日",
-        deadline: "7月9日",
-        group: "科研",
-        tag: "论文发表",
-        description:
-          "2022年7月8日论文被SCI期刊接收，IF=1，从投稿到接收历时六个月。",
-      },
-    },
-    {
-      title: "论文发表",
-      details: {
-        airtime: "7月9日",
-        deadline: "7月9日",
-        group: "科研",
-        tag: "论文发表",
-        description:
-          "2022年7月8日论文被SCI期刊接收，IF=1，从投稿到接收历时六个月。",
-      },
-    },
-    {
-      title: "论文发表",
-      details: {
-        airtime: "7月9日",
-        deadline: "7月9日",
-        group: "科研",
-        tag: "论文发表",
-        description:
-          "2022年7月8日论文被SCI期刊接收，IF=1，从投稿到接收历时六个月。",
-      },
-    },
-    {
-      title: "论文发表",
-      details: {
-        airtime: "7月9日",
-        deadline: "7月9日",
-        group: "科研",
-        tag: "论文发表",
-        description:
-          "2022年7月8日论文被SCI期刊接收，IF=1，从投稿到接收历时六个月。",
-      },
-    },
-  ];
-  const colors = [
-    {
-      pointColor: "#00A2FF",
-      bgColor: "linear-gradient(208.63deg, #39A1F7 0%, #A875FF 100%)",
-      shadow: "0px 1px 15px 0px #4A90E2",
-    },
-    {
-      pointColor: "#97D9E1",
-      bgColor: "linear-gradient(67deg, #D9AFD9 0%, #97D9E1 100%)",
-      shadow: "0px 1px 15px 0px #BAC5DE",
-    },
-    {
-      pointColor: "#FF8D1A",
-      bgColor: "linear-gradient(62deg, #F7CE68 0%, #FBAB7E 50%)",
-      shadow: "0px 1px 15px 0px #FF8D1A",
-    },
-    {
-      pointColor: "#FF8D1A",
-      bgColor: "linear-gradient(62deg, #F7CE68 0%, #FBAB7E 50%)",
-      shadow: "0px 1px 15px 0px #FF8D1A",
-    },
-    {
-      pointColor: "#FF8D1A",
-      bgColor: "linear-gradient(62deg, #F7CE68 0%, #FBAB7E 50%)",
-      shadow: "0px 1px 15px 0px #FF8D1A",
-    },
-    {
-      pointColor: "#FF8D1A",
-      bgColor: "linear-gradient(62deg, #F7CE68 0%, #FBAB7E 50%)",
-      shadow: "0px 1px 15px 0px #FF8D1A",
-    },
-    {
-      pointColor: "#FF8D1A",
-      bgColor: "linear-gradient(62deg, #F7CE68 0%, #FBAB7E 50%)",
-      shadow: "0px 1px 15px 0px #FF8D1A",
-    },
-    {
-      pointColor: "#FF8D1A",
-      bgColor: "linear-gradient(62deg, #F7CE68 0%, #FBAB7E 50%)",
-      shadow: "0px 1px 15px 0px #FF8D1A",
-    },
-  ];
+    });
+  };
   return (
     <Fragment>
-      {plans == null
-        ?
-        <View className='todo-wrap'>
-          <View className='none-wrap'>
-            <View className='none-bg'></View>
-            <View className='none-title'>计划清单是空的</View>
-            <View className='none-slg'>创建计划将添加至此</View>
-            <View
-              className='add'
-              onClick={() => {
-                Taro.navigateTo({ url: "/pages/add/index" });
-              }}
-            >
-              +
-            </View>
-          </View>
-        </View>
-        :
-        <View>
+      {records.length<2 ? (
+        <View className="todo-wrap">
           <View className="header">
-            <Text className='title1'>待做计划</Text>
+            <Text className="title1">待做计划</Text>
             <Picker
-              className='select'
-              mode='selector'
-              range={groups}
+              className="select"
+              mode="selector"
+              range={groupNames}
               onChange={(e) => {
                 console.log(e);
-                setGroup(Number(e.detail.value))
+                setGroupIndex(Number(e.detail.value));
+                if(e.detail.value=='0'){
+                  getRecords(1, 100, [])
+                }
+                else{
+                  getRecords(1, 100, [groups.current[Number(e.detail.value)].id]);
+                }
               }}
             >
-              当前：{groups[group]}
-              <View className="filter-icon"  ></View>
+              当前：{groupNames[groupIndex]}
+              <View className="filter-icon"></View>
+            </Picker>
+          </View>
+          <View className="none-wrap">
+            <View className="none-bg"></View>
+            <View className="none-title">计划清单是空的</View>
+            <View className="none-slg">创建计划将添加至此</View>
+            
+          </View>
+        </View>
+      ) : (
+        <View className="wrap">
+          <View className="header">
+            <Text className="title1">待做计划</Text>
+            <Picker
+              className="select"
+              mode="selector"
+              range={groupNames}
+              onChange={(e) => {
+                console.log(e);
+                setGroupIndex(Number(e.detail.value));
+                if(e.detail.value=='0'){
+                  getRecords(1, 100, [])
+                }
+                else{
+                  getRecords(1, 100, [groups.current[Number(e.detail.value)].id]);
+                }
+              }}
+            >
+              当前：{groupNames[groupIndex]}
+              <View className="filter-icon"></View>
             </Picker>
           </View>
 
-
-          {plans.map((val, index) => {
+          {records.map((val, index) => {
+            console.log(val);
             return (
-              <MemoryCard msg={val} key={index} color={colors[index]}></MemoryCard>
+              <MemoryCard
+                msg={{
+                  title: val.name,
+                  details: {
+                    airtime: val.endTime.substring(0, 10),
+                    deadline: val.endTime.substring(0, 10),
+                    group: groupNames[val.team1],
+                    tagId: val.label,
+                    description: val.introduction,
+                  },
+                }}
+                key={index}
+              ></MemoryCard>
             );
           })}
         </View>
-      }
+      )}
       <View
-        className='add'
+        className="add"
         onClick={() => {
           Taro.navigateTo({ url: "/pages/add/index" });
         }}
@@ -193,7 +159,6 @@ function Todo() {
         +
       </View>
     </Fragment>
-
   );
 }
 

@@ -1,135 +1,280 @@
-import { Fragment, useState } from "react";
+/* eslint-disable jsx-quotes */
+import { Fragment, useEffect, useRef, useState } from "react";
+import Taro from "@tarojs/taro";
 import { View, Text, Input, Picker } from "@tarojs/components";
 import { formatDate } from "../../utils/index";
 import featIcon from "../../assets/feat.png";
 import calendarIcon from "../../assets/calendar.png";
 import "./TodoForm.scss";
 
-const Tags = [
-  {
-    label: "High",
-    background:
-      "linear-gradient(208.63deg, rgba(247, 57, 95, 1) 0%, rgba(245, 34, 34, 1) 100%)",
-    boxShadow: "0px 1px 7.5px 0px rgba(74, 144, 226, 0.6)",
-  },
-  {
-    label: "Medium",
-    background:
-      "linear-gradient(135deg, rgba(66, 166, 237, 1) 0%, rgba(42, 130, 228, 1) 100%)",
-    boxShadow: "0px 1px 5px 0px rgba(80, 227, 194, 0.6)",
-  },
-  {
-    label: "Low",
-    background:
-      "linear-gradient(135deg, rgba(255, 171, 134, 1) 0%, rgba(255, 217, 105, 1) 100%)",
-    boxShadow: "0px 1px 5px 0px rgba(245, 166, 35, 0.6)",
-  },
-];
-function TodoForm(props: { mode: "add" | "edit", type: "todo" | "memory" }) {
-  const { mode, type } = props;
+function TodoForm(props: {
+  mode: "add" | "edit";
+  type: "todo" | "memory";
+  method: Function;
+  data: {
+    name: "";
+    remarks: "";
+    time: "";
+    teamId: null;
+    tagId: null;
+  };
+}) {
+  console.log(props);
+  const { mode, type, method, data } = props;
   //改之前获取相应数据
   const today = formatDate(new Date());
   const [name, setName] = useState("");
   const [remarks, setRemarks] = useState("");
   const [ddl, setDdl] = useState(today);
-  const achievements = ["A", "B", "C"]
-  const [achievement, setAchievement] = useState(0);
-  const [selTag, setSelTag] = useState(0);
+  const [teamIndex, setTeamIndex] = useState(0);
+  const [teamNames, setTeamNames] = useState([""]);
+  const [Tags, setTags] = useState([{ id: 0 }]);
+  const [tagIndex, setTagIndex] = useState(0);
+  const token = useRef("");
+  const teams = useRef([]);
+
+  const judgeMethod = () => {
+    console.log(teams);
+    console.log(teamIndex);
+    if (name && teams.current[teamIndex] && Tags[tagIndex] && ddl) {
+        props.method({
+          name: name,
+          labelId: Tags[tagIndex].id,
+          teamId: teams.current[teamIndex].id,
+          introduction: remarks ? remarks : "",
+          end_time: ddl,
+        });
+      Taro.showToast({
+        title: "操作成功",
+        icon: "success",
+        duration: 700,
+      });
+      setTimeout(() => {
+        Taro.navigateBack();
+      }, 700);
+    } else {
+      Taro.showToast({
+        title: "数据哪里有问题捏~",
+        icon: "error",
+        duration: 1000,
+      });
+    }
+  };
+  const changeTeams = (Index,firstTime) => {
+    setTeamIndex(Number(Index));
+    console.log(teams.current[Number(Index)].id);
+    Taro.request({
+      url: "http://124.222.4.79:3310/api/label/findLabelByTeam",
+      method: "GET",
+      header: {
+        token: token.current,
+      },
+      data: {
+        team1_id: teams.current[Number(Index)].id,
+      },
+      success: (res1) => {
+        console.log(res1);
+        setTags(res1.data.data);
+
+        if (mode == "edit" && firstTime) {
+          res1.data.data.map((item, index) => {
+            if (item.id == props.data.tagId) {
+              setTagIndex(index);
+            }
+          });
+          Taro.request({
+            url: "http://124.222.4.79:3310/api/label/findLabelByTeam",
+            method: "GET",
+            header: {
+              token: token.current,
+            },
+            data: {
+              team1_id: props.data.teamId,
+            },
+            success:(res)=>{
+              setTags(res.data.data);
+            }
+          });
+        }
+      },
+      fail: (reason) => {},
+    });
+  };
+  useEffect(() => {
+    Taro.getStorage({
+      key: "token",
+      success: function (res) {
+        token.current = res.data;
+        //2  find allteam
+        Taro.request({
+          url: "http://124.222.4.79:3310/api/team/findTeamAll",
+          method: "GET",
+          header: { token: res.data },
+          success: (res1: any) => {
+            console.log(res1);
+            teams.current = res1.data.data;
+            setTeamNames(teams.current.map((i) => i.name));
+            // teamNames.current= teams.current.map((i)=>i.name)
+            changeTeams(teams.current[0].id,true);
+            if (mode == "edit") {
+              console.log(teams.current);
+              teams.current.map((item, index) => {
+                if (item.id == props.data.teamId) {
+                  setTeamIndex(index);
+                }
+              });
+            }
+          },
+          fail: () => {
+            Taro.showModal({
+              title: "提示",
+              content: "未找到成就组，请前往创建",
+              success: function (res) {
+                if (res.confirm) {
+                  Taro.navigateTo({ url: "/pages/profile/index" });
+                } else if (res.cancel) {
+                  Taro.navigateBack();
+                }
+              },
+            });
+          },
+        });
+      },
+    });
+
+    if (mode == "edit") {
+      setName(props.data.name);
+      setRemarks(props.data.remarks);
+      setDdl(props.data.time);
+    }
+  }, []);
   return (
     <Fragment>
-      <Text className='title'>{mode == "add" ? "新增" : "修改"}{type == "memory" ? "记忆" : "计划"}</Text>
-      <View className='form-wrap'>
-        <View className='form-item'>
-          <Text className='form-label'>{type=="todo"?"计划":"记忆"}名称</Text>
-          <View className='form-inner'>
+      <Text className="title">
+        {mode == "add" ? "新增" : "修改"}
+        {type == "memory" ? "记忆" : "计划"}
+      </Text>
+      <View className="form-wrap">
+        <View className="form-item">
+          <Text className="form-label">
+            {type == "todo" ? "计划" : "记忆"}名称
+          </Text>
+          <View className="form-inner">
             <Input
-              type='text'
+              type="text"
               value={name}
-              onInput={(e) => { setName(e.detail.value) }}
-              placeholder={type=="todo"?"请输入计划名称":"请输入记忆名称"}
+              onInput={(e) => {
+                setName(e.detail.value);
+              }}
+              placeholder={type == "todo" ? "请输入计划名称" : "请输入记忆名称"}
             />
-            <View className='form-icon'></View>
+            <View className="form-icon"></View>
           </View>
-          <View className='form-divide'></View>
+          <View className="form-divide"></View>
         </View>
-        <View className='form-item'>
-          <Text className='form-label'>{type=="todo"?"截止":"完成"}日期</Text>
-          <View className='form-inner'>
-            <Picker mode='date' value={ddl} onChange={(e) => { setDdl(e.detail.value); }}>
+        <View className="form-item">
+          <Text className="form-label">
+            {type == "todo" ? "截止" : "完成"}日期
+          </Text>
+          <View className="form-inner">
+            <Picker
+              mode="date"
+              value={ddl}
+              onChange={(e) => {
+                setDdl(e.detail.value);
+              }}
+            >
               {ddl}
               <View
-                className='form-icon'
+                className="form-icon"
                 style={{
                   backgroundImage: `url(${calendarIcon})`,
                 }}
               ></View>
             </Picker>
-
           </View>
-          <View className='form-divide'></View>
-        </View> 
-        <View className='form-item'>
-          <Text className='form-label'>{type=="todo"?"计划":"记忆"}备注</Text>
-          <View className='form-inner'>
-            <Input
-              type='text'
-              value={remarks}
-              onInput={(e) => { setRemarks(e.detail.value) }}
-              placeholder={type=="todo"?"请输入计划备注":"请输入记忆备注" }
-            />
-            <View className='form-icon'></View>
-          </View>
-          <View className='form-divide'></View>
+          <View className="form-divide"></View>
         </View>
-        <View className='form-item'>
-          <Text className='form-label'>成就组</Text>
-          <View className='form-inner'>
-            <Picker mode='selector' range={achievements} onChange={(e) => { setAchievement(Number(e.detail.value)) }}>
-              {achievements[achievement]}
+        <View className="form-item">
+          <Text className="form-label">
+            {type == "todo" ? "计划" : "记忆"}备注
+          </Text>
+          <View className="form-inner">
+            <Input
+              type="text"
+              value={remarks}
+              onInput={(e) => {
+                setRemarks(e.detail.value);
+              }}
+              placeholder={type == "todo" ? "请输入计划备注" : "请输入记忆备注"}
+            />
+            <View className="form-icon"></View>
+          </View>
+          <View className="form-divide"></View>
+        </View>
+        <View className="form-item">
+          <Text className="form-label">成就组</Text>
+          <View className="form-inner">
+            <Picker
+              mode="selector"
+              range={teamNames}
+              onChange={(e) => {
+                changeTeams(e.detail.value,false);
+              }}
+            >
+              {teamNames[teamIndex]}
               <View
-                className='form-icon'
+                className="form-icon"
                 style={{
                   backgroundImage: `url(${featIcon})`,
                 }}
               ></View>
             </Picker>
           </View>
-          <View className='form-divide'></View>
+          <View className="form-divide"></View>
         </View>
-        <View className='form-item'>
-          <View className='form-label'>标签</View>
-          <View className='tag-wrap'>
-            {Tags.map((item, index) => {
-              return (
-                <View
-                  key={index}
-                  className='tag-item'
-                  onClick={() => {
-                    setSelTag(index);
-                  }}
-                >
+        <View className="form-item">
+          <View className="form-label">标签</View>
+          {Tags.length !== 0 ? (
+            <View className="tag-wrap">
+              {Tags.map((item, index) => {
+                return (
                   <View
-                    className={
-                      index === selTag ? "tag-color active" : "tag-color"
-                    }
-                    style={{
-                      background: `${item.background}`,
-                      boxShadow: `${item.boxShadow}`,
+                    key={index}
+                    className="tag-item"
+                    onClick={() => {
+                      setTagIndex(index);
                     }}
-                  ></View>
-                  <View className='tag-label'>{item.label}</View>
-                </View>
-              );
-            })}
-          </View>
+                  >
+                    <View
+                      className={
+                        index === tagIndex ? "tag-color active" : "tag-color"
+                      }
+                      style={{ background: `${item.color}` }}
+                    ></View>
+                    <View className="tag-label">{item.name}</View>
+                  </View>
+                );
+              })}
+            </View>
+          ) : (
+            <View>!!!该成就组下暂无标签~，换个看看</View>
+          )}
         </View>
-        <View className='form-item'>
-          <View className='form-btn' onClick={() => { console.log(name, remarks, ddl, achievement, selTag); }}>{mode === "add" ? "创建" : "修改"}</View>
-          {mode !== "add" ? <View className='form-del'>删除任务</View> : null}
+        <View className="form-item">
+          <View
+            className="form-btn"
+            onClick={() => {
+              judgeMethod();
+              console.log(name, remarks, ddl, teamIndex, tagIndex);
+            }}
+          >
+            {mode === "add" ? "创建" : "修改"}
+          </View>
+          {mode !== "add" ? <View className="form-del">删除任务</View> : null}
         </View>
       </View>
     </Fragment>
-
   );
 }
 

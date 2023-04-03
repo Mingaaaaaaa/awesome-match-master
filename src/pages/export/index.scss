@@ -11,6 +11,8 @@
     align-items: center;
     margin-top: 35rpx;
 
+    
+
     .form-label {
       width: 100%;
       opacity: 0.6;
@@ -25,6 +27,7 @@
       justify-content: space-evenly;
     }
     .form-inner {
+      display: flex;
       position: relative;
       width: 100%;
       margin-top: 10rpx;
@@ -112,4 +115,7 @@
   width: 90PX;
   position: relative;
   height: 41PX;
+}
+.last-divide{
+  margin-top:-8PX !important
 }

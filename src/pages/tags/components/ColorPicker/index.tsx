@@ -1,5 +1,6 @@
+/* eslint-disable jsx-quotes */
 import { PageContainer, View } from "@tarojs/components";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import "./index.scss";
 
 export default function ColorPicker(props) {
@@ -28,8 +29,8 @@ export default function ColorPicker(props) {
     setColorData(e.detail.colorData);
     let changeColor = e.detail.colorData.pickerData.hex;
     props.setTags((pre) => {
-      console.log(pre[Number(props.changeTagId)]);
-      pre[Number(props.changeTagId)].background = changeColor;
+      console.log(pre);
+      pre[props.changeTagIndex].color = changeColor;
       return pre;
     });
   };
@@ -48,7 +49,7 @@ export default function ColorPicker(props) {
       zIndex={2}
       closeOnSlideDown
       overlayStyle="background-color: rgba(0, 0, 0, 0.05);"
-      customStyle='padding-top: 20px ;padding-left:40px'
+      customStyle="padding-top: 20px ;padding-left:40px"
       duration={300}
       onLeave={() => {
         props.setIsShow(false);
@@ -60,19 +61,20 @@ export default function ColorPicker(props) {
       <color-picker
         className="picker"
         colorData={colorData}
-        rpxRatio={1.3}
-        onChangecolor={(e) => {
+        rpxRatio={1}
+        onChangeColor={(e) => {
           onChangeColor(e);
           console.log(rate);
         }}
       ></color-picker>
       <View
-      className="select"
+        className="select"
         onClick={() => {
           props.setIsShow(false);
+          props.handleTag(props.changeTagIndex);
         }}
       >
-       选好啦
+        选好啦
       </View>
     </PageContainer>
   );

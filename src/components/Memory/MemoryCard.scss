@@ -4,13 +4,16 @@
   width: 100vw;
   justify-content: space-between;
   padding: 20rpx 40rpx;
+
   .card-point {
     width: 56rpx;
     height: 56rpx;
     border-radius: 50%;
   }
+
   .card-msg {
     width: 580rpx;
+
     .card-date {
       width: 190rpx;
       height: 42rpx;
@@ -18,8 +21,9 @@
       font-weight: 400;
       line-height: 42rpx;
     }
+
     .card-content {
-    //   display: flex;
+      //   display: flex;
       box-sizing: border-box;
       padding: 20rpx;
       width: 580rpx;
@@ -35,15 +39,17 @@
         display: flex;
         width: 100%;
         height: 140rpx;
+
         .title1 {
-          width: 188rpx;
+          width: 365rpx;
           height: 70rpx;
           font-size: 40rpx;
           line-height: 70rpx;
           align-self: center;
-          filter: invert(1);
+          color: white;
           margin-left: 0;
         }
+
         .top-bg {
           position: absolute;
           top: -150rpx;
@@ -54,25 +60,28 @@
           background-size: 100% 100%;
           background-repeat: no-repeat;
         }
-        .change-icon{
-            position: absolute;
-            right: 0;
-            height: 64rpx;
-            width: 64rpx;
-            background-image: url(../../assets/pen.png);
-            background-size: 100% 100%;
-            background-repeat: no-repeat;
-            align-self: center;
+
+        .change-icon {
+          position: absolute;
+          right: 0;
+          height: 64rpx;
+          width: 64rpx;
+          background-image: url(../../assets/pen.png);
+          background-size: 100% 100%;
+          background-repeat: no-repeat;
+          align-self: center;
         }
       }
+
       .card-detail {
-        filter: invert(1);
+        color: white;
         height: 0;
         transition: all ease-out 400ms;
         transform-origin: 50% 0 0;
-        .detail-item{
-           transform: translateY(15rpx);
-           margin-top: 20rpx;
+
+        .detail-item {
+          transform: translateY(15rpx);
+          margin-top: 20rpx;
         }
       }
     }

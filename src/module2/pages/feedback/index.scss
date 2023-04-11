@@ -6,21 +6,18 @@
     height: 120PX;
     margin: 10PX auto;
     border: black solid  1PX;
+    width: 80%;
+    border-radius: 23px;
 }
 
 .text {
-    left: 26PX;
-    top: 144PX;
     width: 333PX;
-    height: 47PX;
     opacity: 1;
-    /** 文本1 */
     font-size: 16PX;
     font-weight: 400;
-    letter-spacing: 0PX;
-    line-height: 0PX;
-    color: rgba(0, 0, 0, 1);
-    text-align: left;
+    margin:  0 auto;
+    text-align: center;
+
 }
 
 .btn {
@@ -30,4 +27,5 @@
     border-radius: 10PX;
     background: rgba(42, 130, 228, 1);
     border: 2px solid rgba(42, 130, 228, 1);
+    color: white;
 }

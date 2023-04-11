@@ -8,10 +8,19 @@ import "./index.scss";
 
 function Todo() {
   const today = formatDate(new Date());
-  const [records, setRecords] = useState([{ endTime: " " }]);
+  const [records, setRecords] = useState([
+    {
+      name: " ",
+      id: "",
+      introduction: "",
+      label: "",
+      team1: "",
+      endTime: "",
+    },
+  ]);
   const [groupIndex, setGroupIndex] = useState(0);
-  const [groupNames, setGroupNames] = useState(["ALL"]);
-  const groups = useRef([{ name: "All", id: 0 }]);
+  const [groupNames, setGroupNames] = useState(["全部"]);
+  const groups = useRef([{ name: "全部", id: 0 }]);
   const token = useRef();
   useEffect(() => {
     Taro.getStorage({
@@ -25,14 +34,14 @@ function Todo() {
           method: "GET",
           header: { token: res.data },
           success: (res1: any) => {
-            console.log(res1);
+            //console.log(res1);
             Taro.setStorage({
               key: "user_id",
               data: res1.data.data[0].user_id,
             });
             groups.current.push.apply(groups.current, res1.data.data);
             setGroupNames(groups.current.map((i) => i.name));
-            console.log(groups.current);
+            //console.log(groups.current);
           },
           fail: () => {
             Taro.showToast({
@@ -66,7 +75,7 @@ function Todo() {
         page: page,
         size: size,
         start_time: today,
-        end_time: "2032-01-01",
+        end_time: "3032-01-01",
         teams: teams,
       },
       success: (res1) => {
@@ -74,9 +83,16 @@ function Todo() {
       },
     });
   };
+
+  Taro.usePullDownRefresh(() => {
+    getRecords(3, 100, []);
+    setTimeout(() => {
+      Taro.stopPullDownRefresh();
+    }, 200);
+  });
   return (
     <Fragment>
-      {records.length<2 ? (
+      {records.length < 1 ? (
         <View className="todo-wrap">
           <View className="header">
             <Text className="title1">待做计划</Text>
@@ -85,17 +101,18 @@ function Todo() {
               mode="selector"
               range={groupNames}
               onChange={(e) => {
-                console.log(e);
+                //console.log(e);
                 setGroupIndex(Number(e.detail.value));
-                if(e.detail.value=='0'){
-                  getRecords(1, 100, [])
-                }
-                else{
-                  getRecords(1, 100, [groups.current[Number(e.detail.value)].id]);
+                if (e.detail.value == "0") {
+                  getRecords(1, 100, []);
+                } else {
+                  getRecords(1, 100, [
+                    groups.current[Number(e.detail.value)].id,
+                  ]);
                 }
               }}
             >
-              当前：{groupNames[groupIndex]}
+              {groupNames[groupIndex]}
               <View className="filter-icon"></View>
             </Picker>
           </View>
@@ -103,7 +120,6 @@ function Todo() {
             <View className="none-bg"></View>
             <View className="none-title">计划清单是空的</View>
             <View className="none-slg">创建计划将添加至此</View>
-            
           </View>
         </View>
       ) : (
@@ -115,45 +131,54 @@ function Todo() {
               mode="selector"
               range={groupNames}
               onChange={(e) => {
-                console.log(e);
+                //console.log(e);
                 setGroupIndex(Number(e.detail.value));
-                if(e.detail.value=='0'){
-                  getRecords(1, 100, [])
-                }
-                else{
-                  getRecords(1, 100, [groups.current[Number(e.detail.value)].id]);
+                if (e.detail.value == "0") {
+                  getRecords(1, 100, []);
+                } else {
+                  getRecords(1, 100, [
+                    groups.current[Number(e.detail.value)].id,
+                  ]);
                 }
               }}
             >
-              当前：{groupNames[groupIndex]}
+              {groupNames[groupIndex]}
               <View className="filter-icon"></View>
             </Picker>
           </View>
 
           {records.map((val, index) => {
-            console.log(val);
-            return (
-              <MemoryCard
-                msg={{
-                  title: val.name,
-                  details: {
-                    airtime: val.endTime.substring(0, 10),
-                    deadline: val.endTime.substring(0, 10),
-                    group: groupNames[val.team1],
-                    tagId: val.label,
-                    description: val.introduction,
-                  },
-                }}
-                key={index}
-              ></MemoryCard>
-            );
+            if (val.id) {
+              return (
+                <MemoryCard
+                  msg={{
+                    title: val.name,
+                    details: {
+                      airtime: val.endTime.substring(0, 10),
+                      deadline: val.endTime.substring(0, 10),
+                      group: val.team1,
+                      tagId: val.label,
+                      description: val.introduction,
+                      id: val.id,
+                    },
+                  }}
+                  key={index}
+                ></MemoryCard>
+              );
+            } else {
+              Taro.showToast({
+                title: "加载中ing",
+                icon: "loading",
+                duration: 500,
+              });
+            }
           })}
         </View>
       )}
       <View
         className="add"
         onClick={() => {
-          Taro.navigateTo({ url: "/pages/add/index" });
+          Taro.navigateTo({ url: "/module1/pages/add/index" });
         }}
       >
         +

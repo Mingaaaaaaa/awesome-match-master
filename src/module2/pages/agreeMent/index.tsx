@@ -1,4 +1,4 @@
-import { Text, View } from "@tarojs/components";
+import {  View } from "@tarojs/components";
 import "./index.scss";
 
 function ArgeeMent() {

@@ -1,3 +1,4 @@
+/* eslint-disable jsx-quotes */
 import { View, Image, Input, Button } from "@tarojs/components";
 import Taro, { useRouter } from "@tarojs/taro";
 import { useEffect, useRef, useState } from "react";
@@ -15,8 +16,21 @@ function Tags() {
   const token = useRef("");
   const userId = useRef("");
   useEffect(() => {
+    Taro.getStorage({
+      key: "user_id",
+      success: (res) => {
+        userId.current = res.data;
+      },
+      fail: (res) => {
+        Taro.showToast({
+          title: "获取userId失败",
+          icon: "error",
+          duration: 1000,
+        });
+      },
+    });
     //  7
-    console.log(teamId);
+    //console.log(teamId);
     Taro.getStorage({
       key: "token",
       success: (res) => {
@@ -31,7 +45,7 @@ function Tags() {
             team1_id: teamId,
           },
           success: (res1) => {
-            console.log(res1);
+            //console.log(res1);
             setTags(res1.data.data);
           },
         });
@@ -47,7 +61,6 @@ function Tags() {
             team1_id: teamId,
           },
           success: (res3) => {
-            userId.current = res3.data.data.user_id;
             setTeamName(res3.data.data.name);
           },
         });
@@ -71,7 +84,6 @@ function Tags() {
           icon: "success",
           duration: 700,
         });
-      
       },
     });
     setTags((pre) => {
@@ -81,8 +93,8 @@ function Tags() {
     setF5(!f5);
   };
   const handleTag = (index, name = tags[index].name) => {
-    console.log(tags[index]);
-    console.log(name);
+    //console.log(tags[index]);
+    //console.log(name);
     if (name) {
       if (tags[index].id == -1) {
         // 5  add label
@@ -134,7 +146,7 @@ function Tags() {
       data: {
         id: id,
         name: name,
-        user_id:userId.current
+        user_id: userId.current,
       },
       success: (res3) => {
         if (res3.data.code == 0) {
@@ -152,41 +164,9 @@ function Tags() {
         }
       },
     });
-
-    // console.log(id + name);
-    // console.log(ids);
-    // if (!ids.current.includes(Number(id))) {
-    //   //1 addteam
-    //   Taro.request({
-    //     url: "http://124.222.4.79:3310/api/team/addTeam",
-    //     method: "GET",
-    //     header: {
-    //       token: token.current,
-    //     },
-    //     data: {
-    //       name: name,
-    //     },
-    //     success: (res3) => {
-    //       if (res3.data.code == 0) {
-    //         Taro.showToast({
-    //           title: "添加成功",
-    //           icon: "success",
-    //           duration: 1000,
-    //         });
-    //       } else {
-    //         Taro.showToast({
-    //           title: res3.data.msg,
-    //           icon: "error",
-    //           duration: 1000,
-    //         });
-    //       }
-    //     },
-    //   });
-    // } else {
-    // }
   };
   const deleteTeam = () => {
-    console.log(tags);
+    //console.log(tags);
     // 4  delTeam
     Taro.request({
       url: "http://124.222.4.79:3310/api/team/delTeam",
@@ -204,7 +184,7 @@ function Tags() {
           duration: 1000,
         });
         setTimeout(() => {
-          Taro.navigateTo({ url: "/pages/achievements/index" });
+          Taro.navigateTo({ url: "/module2/pages/achievements/index" });
         }, 700);
       },
     });
@@ -215,6 +195,7 @@ function Tags() {
         className="achieveName"
         value={teamName}
         onBlur={(e) => {
+          setTeamName(e.detail.value);
           handleTeam(teamId, e.detail.value);
         }}
       ></Input>
@@ -230,7 +211,7 @@ function Tags() {
                 style={{ background: `${item.color}` }}
                 onClick={(e) => {
                   setIsShow(true);
-                  console.log(index);
+                  //console.log(index);
                   setChangeTageIndex(index);
                   setChangeTageId(item.id);
                 }}
@@ -241,8 +222,8 @@ function Tags() {
                 id={index}
                 placeholder="输入标签名称"
                 onBlur={(e) => {
-                  console.log(e);
-                  console.log(tags);
+                  //console.log(e);
+                  //console.log(tags);
                   setTags((pre) => {
                     pre[e.mpEvent.target.id].name = e.detail.value;
                     return pre;
@@ -254,7 +235,7 @@ function Tags() {
               <Image
                 id={index}
                 className="delete"
-                src="../../assets/delete.png"
+                src="../../../assets/delete.png"
                 onClick={(e) => {
                   deleteTag(e.mpEvent.target.id);
                 }}

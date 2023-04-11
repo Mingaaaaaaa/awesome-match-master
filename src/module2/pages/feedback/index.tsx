@@ -41,7 +41,7 @@ function Feedback() {
   };
   return (
     <View>
-      <Text className="text">输入您的反馈，点赞还是吐槽，我们都很期待...</Text>
+      <View className="text">输入您的反馈，点赞还是吐槽，我们都很期待...</View>
       <Textarea
         className="feedback"
         onInput={(e) => {

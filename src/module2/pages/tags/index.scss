@@ -1,5 +1,6 @@
-.wrap{
+.wrap {
     height: 100vh;
+
     .divide {
         width: 100%;
         opacity: 0.2;
@@ -7,7 +8,7 @@
         border: 0.5rpx solid rgba(151, 151, 151, 1);
         margin-bottom: 20PX;
     }
-    
+
     .achieveName {
         position: relative;
         width: 137PX;
@@ -21,33 +22,33 @@
         text-align: center;
         margin: 0 auto;
     }
-    
-    .tags-wrap{
+
+    .tags-wrap {
         height: 63vh;
         overflow: hidden;
+
         .tag-item {
             display: flex;
             justify-content: space-evenly;
             width: 90%;
             margin: 15PX auto;
-        
+
             .tag-color {
                 width: 30PX;
                 height: 30PX;
                 border-radius: 50%;
                 filter: grayscale(50%);
             }
-        
+
             .delete {
                 width: 25PX;
                 height: 25PX;
             }
         }
     }
-    
-    
+
     .add {
-        position:sticky;
+        position: sticky;
         left: 50%;
         transform: translateX(-50%);
         bottom: 20vh;
@@ -60,7 +61,7 @@
         box-shadow: 0PX 2PX 15PX 0PX rgba(74, 144, 226, 0.6);
         z-index: 1;
     }
-    
+
     .delete-team {
         border-bottom: solid 1px;
         text-align: center;

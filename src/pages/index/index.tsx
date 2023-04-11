@@ -1,39 +1,57 @@
 /* eslint-disable jsx-quotes */
 import { Fragment, useEffect, useRef, useState } from "react";
 import Taro from "@tarojs/taro";
-import { Button, View, Picker, Icon, Input } from "@tarojs/components";
+import { Button, View, Picker } from "@tarojs/components";
 import { formatDate } from "../../utils/index";
 import MemoryCard from "../../components/Memory/MemoryCard";
 import "./index.scss";
 
+interface record {
+  name: string;
+  id: string;
+  introduction: string;
+  label: string;
+  team1: string;
+  endTime: string;
+}
 export default function Index() {
   const today = formatDate(new Date());
-  const [records, setRecords] = useState([{ endTime: "" }]);
+  const [records, setRecords] = useState<Array<record>>([
+    {
+      name: "",
+      id: "",
+      introduction: "",
+      label: "", //85
+      team1: "", //24
+      endTime: "",
+    },
+  ]);
   const [groupIndex, setGroupIndex] = useState(0);
-  const [groupNames, setGroupNames] = useState(["ALL"]);
-  const groups = useRef([{ name: "All", id: 0 }]);
+  const [groupNames, setGroupNames] = useState(["全部"]);
+  const groups = useRef([{ name: "全部", id: 0 }]);
   const token = useRef();
   useEffect(() => {
+    console.log(1);
     Taro.getStorage({
       key: "token",
       success: function (res) {
         token.current = res.data;
-        getRecords(3, 100, []);
         //2  find allteam
         Taro.request({
           url: "http://124.222.4.79:3310/api/team/findTeamAll",
           method: "GET",
           header: { token: res.data },
           success: (res1: any) => {
-            console.log(res1);
+            //console.log(res1);
             Taro.setStorage({
               key: "user_id",
               data: res1.data.data[0].user_id,
             });
             groups.current.push.apply(groups.current, res1.data.data);
+            getRecords(1, 100, []);
             setGroupNames(groups.current.map((i) => i.name));
             // groupNames.current= groups.current.map((i)=>i.name)
-            console.log(groups.current);
+            //console.log(groups.current);
           },
           fail: () => {
             Taro.showToast({
@@ -56,138 +74,6 @@ export default function Index() {
       },
     });
   }, []);
-  const assets = [
-    {
-      title: "论文发表",
-      details: {
-        airtime: "7月9日",
-        deadline: "7月9日",
-        group: "科研",
-        tag: "论文发表",
-        description:
-          "2022年7月8日论文被SCI期刊接收，IF=1，从投稿到接收历时六个月。",
-      },
-    },
-    {
-      title: "论文发表",
-      details: {
-        airtime: "7月9日",
-        deadline: "7月9日",
-        group: "科研",
-        tag: "论文发表",
-        description:
-          "2022年7月8日论文被SCI期刊接收，IF=1，从投稿到接收历时六个月。",
-      },
-    },
-    {
-      title: "论文发表",
-      details: {
-        airtime: "7月9日",
-        deadline: "7月9日",
-        group: "科研",
-        tag: "论文发表",
-        description:
-          "2022年7月8日论文被SCI期刊接收，IF=1，从投稿到接收历时六个月。",
-      },
-    },
-    {
-      title: "论文发表",
-      details: {
-        airtime: "7月9日",
-        deadline: "7月9日",
-        group: "科研",
-        tag: "论文发表",
-        description:
-          "2022年7月8日论文被SCI期刊接收，IF=1，从投稿到接收历时六个月。",
-      },
-    },
-    {
-      title: "论文发表",
-      details: {
-        airtime: "7月9日",
-        deadline: "7月9日",
-        group: "科研",
-        tag: "论文发表",
-        description:
-          "2022年7月8日论文被SCI期刊接收，IF=1，从投稿到接收历时六个月。",
-      },
-    },
-    {
-      title: "论文发表",
-      details: {
-        airtime: "7月9日",
-        deadline: "7月9日",
-        group: "科研",
-        tag: "论文发表",
-        description:
-          "2022年7月8日论文被SCI期刊接收，IF=1，从投稿到接收历时六个月。",
-      },
-    },
-    {
-      title: "论文发表",
-      details: {
-        airtime: "7月9日",
-        deadline: "7月9日",
-        group: "科研",
-        tag: "论文发表",
-        description:
-          "2022年7月8日论文被SCI期刊接收，IF=1，从投稿到接收历时六个月。",
-      },
-    },
-    {
-      title: "论文发表",
-      details: {
-        airtime: "7月9日",
-        deadline: "7月9日",
-        group: "科研",
-        tag: "论文发表",
-        description:
-          "2022年7月8日论文被SCI期刊接收，IF=1，从投稿到接收历时六个月。",
-      },
-    },
-  ];
-  const colors = [
-    {
-      pointColor: "#00A2FF",
-      bgColor: "linear-gradient(208.63deg, #39A1F7 0%, #A875FF 100%)",
-      shadow: "0px 1px 15px 0px #4A90E2",
-    },
-    {
-      pointColor: "#97D9E1",
-      bgColor: "linear-gradient(67deg, #D9AFD9 0%, #97D9E1 100%)",
-      shadow: "0px 1px 15px 0px #BAC5DE",
-    },
-    {
-      pointColor: "#FF8D1A",
-      bgColor: "linear-gradient(62deg, #F7CE68 0%, #FBAB7E 50%)",
-      shadow: "0px 1px 15px 0px #FF8D1A",
-    },
-    {
-      pointColor: "#FF8D1A",
-      bgColor: "linear-gradient(62deg, #F7CE68 0%, #FBAB7E 50%)",
-      shadow: "0px 1px 15px 0px #FF8D1A",
-    },
-    {
-      pointColor: "#FF8D1A",
-      bgColor: "linear-gradient(62deg, #F7CE68 0%, #FBAB7E 50%)",
-      shadow: "0px 1px 15px 0px #FF8D1A",
-    },
-    {
-      pointColor: "#FF8D1A",
-      bgColor: "linear-gradient(62deg, #F7CE68 0%, #FBAB7E 50%)",
-      shadow: "0px 1px 15px 0px #FF8D1A",
-    },
-    {
-      pointColor: "#FF8D1A",
-      bgColor: "linear-gradient(62deg, #F7CE68 0%, #FBAB7E 50%)",
-      shadow: "0px 1px 15px 0px #FF8D1A",
-    },
-    {
-      pointColor: "#FF8D1A",
-      bgColor: "linear-gradient(62deg, #F7CE68 0%, #FBAB7E 50%)",
-      shadow: "0px 1px 15px 0px #FF8D1A",
-    },
-  ];
   const getRecords = (page: number, size: number, teams: Array<number>) => {
     //8   find all records
     Taro.request({
@@ -197,7 +83,7 @@ export default function Index() {
       data: {
         page: page,
         size: size,
-        start_time: "2022-01-01",
+        start_time: "1900-01-01",
         end_time: today,
         teams: teams,
       },
@@ -207,17 +93,18 @@ export default function Index() {
       },
     });
   };
-
+  Taro.usePullDownRefresh(() => {
+    getRecords(1, 100, []);
+    setTimeout(() => {
+      Taro.stopPullDownRefresh();
+    }, 200);
+  });
   return (
     <Fragment>
-      {records.length > 1 ? (
+      {records.length >= 1 ? (
         <View className="index">
           <View className="wrap">
             <View className="header">
-              <View className="search">
-                <Icon size="20" type="search" className="search-icon"></Icon>
-                <Input className="search-input"></Input>
-              </View>
               <Picker
                 className="select"
                 mode="selector"
@@ -226,38 +113,47 @@ export default function Index() {
                   Taro.showLoading({
                     title: "加载中",
                   });
-                  console.log(e);
+                  //console.log(e);
                   setGroupIndex(Number(e.detail.value));
-                  if(e.detail.value=='0'){
-                    getRecords(1, 100, [])
-                  }
-                  else{
-                    getRecords(1, 100, [groups.current[Number(e.detail.value)].id]);
+                  if (e.detail.value == "0") {
+                    getRecords(1, 100, []);
+                  } else {
+                    getRecords(1, 100, [
+                      groups.current[Number(e.detail.value)].id,
+                    ]);
                   }
                   Taro.hideLoading();
                 }}
               >
-                当前：{groupNames[groupIndex]}
+                {groupNames[groupIndex]}
                 <View className="filter-icon"></View>
               </Picker>
             </View>
-            {records.map((val, index) => {
-              console.log(val);
-              return (
-                <MemoryCard
-                  msg={{
-                    title: val.name,
-                    details: {
-                      airtime: val.endTime.substring(0, 10),
-                      deadline: val.endTime.substring(0, 10),
-                      group: val.team1,
-                      tagId: val.label,
-                      description: val.introduction,
-                    },
-                  }}
-                  key={index}
-                ></MemoryCard>
-              );
+            {records.map((val: record, index) => {
+              if (val.id) {
+                return (
+                  <MemoryCard
+                    msg={{
+                      title: val.name,
+                      details: {
+                        airtime: val.endTime.slice(0, 10),
+                        deadline: val.endTime.slice(0, 10),
+                        group: val.team1,
+                        tagId: val.label,
+                        description: val.introduction,
+                        id: val.id,
+                      },
+                    }}
+                    key={index}
+                  ></MemoryCard>
+                );
+              } else {
+                Taro.showToast({
+                  title: "加载中ing",
+                  icon: "loading",
+                  duration: 500,
+                });
+              }
             })}
           </View>
           <View className="btns">
@@ -272,7 +168,7 @@ export default function Index() {
             <View
               className="add"
               onClick={() => {
-                Taro.navigateTo({ url: "/pages/add/index" });
+                Taro.navigateTo({ url: "/module1/pages/add/index" });
               }}
             >
               +
@@ -290,18 +186,19 @@ export default function Index() {
                 Taro.showLoading({
                   title: "加载中",
                 });
-                console.log(e);
+                //console.log(e);
                 setGroupIndex(Number(e.detail.value));
-                if(e.detail.value=='0'){
-                  getRecords(1, 100, [])
-                }
-                else{
-                  getRecords(1, 100, [groups.current[Number(e.detail.value)].id]);
+                if (e.detail.value == "0") {
+                  getRecords(1, 100, []);
+                } else {
+                  getRecords(1, 100, [
+                    groups.current[Number(e.detail.value)].id,
+                  ]);
                 }
                 Taro.hideLoading();
               }}
             >
-              当前：{groupNames[groupIndex]}
+              {groupNames[groupIndex]}
               <View className="filter-icon"></View>
             </Picker>
           </View>
@@ -322,7 +219,7 @@ export default function Index() {
             <View
               className="add"
               onClick={() => {
-                Taro.navigateTo({ url: "/pages/add/index" });
+                Taro.navigateTo({ url: "/module1/pages/add/index" });
               }}
             >
               +

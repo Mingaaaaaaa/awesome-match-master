@@ -1,13 +1,12 @@
+/* eslint-disable jsx-quotes */
 import Taro from "@tarojs/taro";
+import { useEffect, useState } from "react";
 import { Button, View } from "@tarojs/components";
 import "./index.scss";
-import { useEffect, useState } from "react";
 
 function Profile() {
   var token;
-  const [avatarUrl, serAvatarUrl] = useState(
-    "https://thirdwx.qlogo.cn/mmopen/vi_32/POgEwh4mIHO4nibH0KlMECNjjGxQUq24ZEaGT4poC6icRiccVGKSyXwibcPq4BWmiaIGuG1icwxaQX6grC9VemZoJ8rg/132"
-  );
+  const [avatarUrl, serAvatarUrl] = useState("../../assets/user.jpeg");
   const [isLogin, setIsLogin] = useState(false);
 
   useEffect(() => {
@@ -25,7 +24,7 @@ function Profile() {
   }, []);
   const login = () => {
     let userInfo;
-    console.log(isLogin);
+    //console.log(isLogin);
     //islogin?
     if (isLogin) {
       Taro.clearStorage();
@@ -44,7 +43,7 @@ function Profile() {
           delete userInfo.userInfo.is_demote;
           Taro.login({
             success: (res1) => {
-              console.log(res1.code);
+              //console.log(res1.code);
               Taro.request({
                 url: "http://124.222.4.79:3310/api/user/login",
                 method: "POST",
@@ -66,10 +65,10 @@ function Profile() {
                   // user_info: userInfo.userInfo,
                 },
                 success: (res2) => {
-                  setIsLogin(true)
-                  console.log(res2);
+                  setIsLogin(true);
+                  //console.log(res2);
                   try {
-                    Taro.setStorageSync("token", res2.data.data);
+                    Taro.setStorageSync("token", res2.data.data[0]);
                   } catch (e) {
                     Taro.showToast({
                       title: "出错了",
@@ -77,25 +76,19 @@ function Profile() {
                       duration: 1000,
                     });
                   }
+                  Taro.setStorage({
+                    key: "user_id",
+                    data: res2.data.data[1],
+                  });
+
                   Taro.showToast({
                     title: "登录成功",
                     icon: "success",
                     duration: 1000,
                   });
-                  setTimeout(()=>{Taro.reLaunch({url:'/pages/index/index'})},1000)
-               
-
-                  // //14
-                  // Taro.request({
-                  //   url: "http://124.222.4.79:3310/api/record/delRecord",
-                  //   method: "GET",
-                  //   header: {
-                  //     token: token,
-                  //   },
-                  //   data: {
-                  //     record_id:1
-                  //   },
-                  // });
+                  setTimeout(() => {
+                    Taro.reLaunch({ url: "/pages/index/index" });
+                  }, 1000);
                 },
               });
             },
@@ -117,7 +110,7 @@ function Profile() {
             style={{ backgroundImage: `url(${avatarUrl})` }}
           />
         </View>
-        <text>{isLogin?'今天也是元气满满的一天哦!':'点击获取头像'}</text>
+        <text>{isLogin ? "今天也是元气满满的一天哦!" : "点击获取头像"}</text>
       </View>
       <View className="bottom-wrap">
         {/* <View className='bottom-item'>
@@ -130,7 +123,7 @@ function Profile() {
         <View
           className="bottom-item"
           onClick={() => {
-            Taro.navigateTo({ url: "/pages/achievements/index" });
+            Taro.navigateTo({ url: "/module2/pages/achievements/index" });
           }}
         >
           <View className="item-icon icon2"></View>
@@ -142,7 +135,7 @@ function Profile() {
         <View
           className="bottom-item"
           onClick={() => {
-            Taro.navigateTo({ url: "/pages/feedback/index" });
+            Taro.navigateTo({ url: "/module2/pages/feedback/index" });
           }}
         >
           <View className="item-icon icon3"></View>
@@ -154,7 +147,7 @@ function Profile() {
         <View
           className="bottom-item"
           onClick={() => {
-            Taro.navigateTo({ url: "/pages/agreeMent/index" });
+            Taro.navigateTo({ url: "/module2/pages/agreeMent/index" });
           }}
         >
           <View className="item-icon icon4"></View>
@@ -163,13 +156,13 @@ function Profile() {
             <View className="msg-left"></View>
           </View>
         </View>
-        <View className="bottom-item">
+        {/* <View className="bottom-item">
           <View className="item-icon icon5"></View>
           <View className="item-msg">
-            <View className="msg-detail">更新日志</View>
+            <View className="msg-detail" onClick={()=>{Taro.navigateTo({url:"pages/graph/index"})}}>图谱功能</View>
             <View className="msg-left"></View>
           </View>
-        </View>
+        </View> */}
       </View>
       <View className="submit" onClick={login}>
         {isLogin ? "退出登录" : "登录"}

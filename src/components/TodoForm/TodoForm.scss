@@ -24,7 +24,7 @@
     .form-inner {
       position: relative;
       width: 100%;
-      margin-top: 10rpx;
+      margin-top: 21rpx;
 
       .form-icon {
         position: absolute;
@@ -32,11 +32,12 @@
         transform: translateY(-50%);
         right: 0;
         width: 50rpx;
-        height: 50rpx;
+        height: 70rpx;
         // background-image: url(../../assets/feat.png);
         background-repeat: no-repeat;
         background-size: 100% 100%;
       }
+      
     }
 
     .form-divide {
@@ -62,10 +63,9 @@
           width: 120rpx;
           height: 120rpx;
           border-radius: 50%;
-          filter: grayscale(50%);
 
           &.active {
-            filter: grayscale(0%);
+            border: black solid 2px;
           }
         }
 
@@ -108,4 +108,7 @@
   width: 90PX;
   position: relative;
   height: 41PX;
+}
+.form-icon:nth-child(0n+1){
+  height: 50rpx;
 }

@@ -1,7 +1,7 @@
 import { View } from "@tarojs/components";
 import { useEffect, useRef } from "react";
 import Taro from "@tarojs/taro";
-import TodoForm from "../../components/TodoForm/TodoForm";
+import TodoForm from "../../../components/TodoForm/TodoForm";
 
 function Add() {
   var type;
@@ -44,9 +44,8 @@ function Add() {
         state: 1,
       },
       success: (res) => {
-        console.log(res);
+        //console.log(res);
         if (res.data.data.code == 0) {
-         
         }
       },
     });

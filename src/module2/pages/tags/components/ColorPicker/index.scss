@@ -1,0 +1,41 @@
+.select {
+    height: 70px;
+    width: 150px;
+    text-align: center;
+    margin: 0 auto;
+    margin-right: 44%;
+    margin-bottom: 50px;
+    border: 2px solid;
+    background-color: " linear-gradient(135deg, rgba(255, 171, 134, 1) 0%, rgba(229, 229, 229, 1) 0%);";
+    border-radius: 10px;
+    line-height: 66px;
+    margin-top: 20PX;
+}
+
+.title {
+    margin: 0 auto;
+    text-align: center;
+    font-size: 18PX;
+}
+
+.color-container {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-gap: 10rpx;
+    place-self: center;
+    margin: 0 auto;
+    padding: 20px;
+
+    .color-item {
+        height: 36PX;
+        width: 36PX;
+        border-radius: 36PX;
+    }
+
+     .active {
+        border: black solid 2px;
+        height: 36PX;
+        width: 36PX;
+        border-radius: 36PX;
+    }
+}

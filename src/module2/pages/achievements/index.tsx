@@ -1,12 +1,13 @@
+/* eslint-disable jsx-quotes */
 import { View, Image, Input } from "@tarojs/components";
 import Taro from "@tarojs/taro";
 import { useEffect, useRef, useState } from "react";
 import "./index.scss";
 
 function Achievements() {
-  const [assets, setAssets] = useState([]);
+  const [assets, setAssets] = useState([{ id: 0, name: "请输入成就组名称..." },]);
   const token = useRef("");
-  const ids = useRef([]);
+  const ids = useRef([0]);
   useEffect(() => {
     Taro.getStorage({
       key: "token",
@@ -21,15 +22,14 @@ function Achievements() {
           },
           success: (res1: any) => {
             console.log(res1);
-            Taro.setStorage({
-              key: "user_id",
-              data: res1.data.data[0].user_id,
-            });
-            setAssets(res1.data.data);
-
-            ids.current = res1.data.data.map((i) => {
-              return i?.id;
-            });
+            if (res1.data.data.length != 0) {
+              setAssets(res1.data.data);
+              ids.current = res1.data.data.map((i) => {
+                return i?.id;
+              });
+            }else{
+              handleTeam("0", '请输入成就组名称...');
+            }
           },
           fail: () => {
             Taro.showToast({
@@ -43,28 +43,11 @@ function Achievements() {
       fail: function () {},
     });
   }, []);
-  const fetchData = () => {
-    Taro.request({
-      url: "http://124.222.4.79:3310/api/team/findTeamAll",
-      method: "GET",
-      header: {
-        token: token.current,
-      },
-      success: (res1: any) => {
-        console.log(res1);
-        setAssets(res1.data.data);
-      },
-      fail: () => {
-        Taro.showToast({
-          title: "获取成就组失败",
-          icon: "error",
-          duration: 2000,
-        });
-      },
-    });
-  };
+
   const addTeam = () => {
+    console.log(assets);
     setAssets((pre) => {
+      console.log(pre);
       return [
         ...pre,
         { id: assets[assets.length - 1].id + 1, name: "请输入成就组名称..." },
@@ -74,9 +57,9 @@ function Achievements() {
   };
 
   const handleTeam = (id: string, name: string) => {
-    console.log(id + name);
-    console.log(ids);
-    if (!ids.current.includes(Number(id))) {
+    //console.log(id + name);
+    //console.log(ids);
+    if (!ids.current.includes(Number(id)) ||id==0) {
       //1 addteam
       Taro.request({
         url: "http://124.222.4.79:3310/api/team/addTeam",
@@ -142,7 +125,7 @@ function Achievements() {
             className="achieve"
             key={index}
             onClick={() => {
-              Taro.navigateTo({ url: `/pages/tags/index?id=${item.id}` });
+              Taro.navigateTo({ url: `/module2/pages/tags/index?id=${item.id}` });
             }}
           >
             <Input
@@ -154,7 +137,7 @@ function Achievements() {
               //   handleTeam(e.mpEvent.target.id, e.detail.value);
               // }}
             ></Input>
-            <Image className="arrow" src="../../assets/arrow.png" />
+            <Image className="arrow" src="../../../assets/arrow.png" />
           </View>
         );
       })}

@@ -11,7 +11,7 @@
     align-items: center;
     margin-top: 35rpx;
 
-    
+
 
     .form-label {
       width: 100%;
@@ -22,16 +22,18 @@
       text-align: left;
       vertical-align: top;
     }
-    .tags{
+
+    .tags {
       display: flex;
       justify-content: space-evenly;
     }
+
     .form-inner {
       display: flex;
       position: relative;
       width: 100%;
-      margin-top: 10rpx;
-    
+      margin-top: 21rpx;
+
 
       .form-icon {
         position: absolute;
@@ -39,17 +41,26 @@
         transform: translateY(-50%);
         right: 0;
         width: 50rpx;
-        height: 50rpx;
+        height: 70rpx;
         // background-image: url(../../assets/feat.png);
         background-repeat: no-repeat;
         background-size: 100% 100%;
       }
     }
 
+    .fold-icon {
+      width: 16PX;
+      height: 16PX;
+      background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARzQklUCAgICHwIZIgAAAA+SURBVDiNY2AYBWSBhoYGBxibCU2igQjNDQwMDA6EFOCUI8YSrIYQrRmbIfg0M5JiCNG2oxniQJbGUUA8AADRXh3EVj4RkAAAAABJRU5ErkJggg==);
+      position: relative;
+      top: 57PX;
+      left: 334PX;
+    }
+
     .form-divide {
-      width: 100%;
+      width: 326PX;
+      margin: 5PX auto;
       opacity: 0.2;
-      margin-top: 20rpx;
       border: 0.5rpx solid rgba(151, 151, 151, 1);
     }
 
@@ -116,6 +127,56 @@
   position: relative;
   height: 41PX;
 }
-.last-divide{
-  margin-top:-8PX !important
+
+.last-divide {
+  margin-top: -8PX !important
+}
+
+.team-name {
+  font-size: 16PX;
+  font-weight: 400;
+  letter-spacing: 0PX;
+  line-height: 22PX;
+  color: rgba(64, 72, 82, 1);
+  text-align: left;
+  vertical-align: top;
+  margin: 0PX 0PX 10PX 0PX;
+  opacity: 0.6;
+}
+
+.group {
+  position: relative;
+  left: 24PX;
+  width: 310PX;
+  overflow: hidden;
+  transition: all 1s ease-out;
+}
+
+.format {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.team-header {
+  display: flex;
+  width: 326PX;
+  margin: 0 auto;
+  justify-content: space-between;
+
+  .all-select {
+    //  background-image: url(../../assets/select.png);
+    border: 1px solid #27D0D8;
+    border-radius: 16PX;
+    width: 16PX;
+    height: 16PX;
+    position: relative;
+    top: 13PX;
+  }
+}
+
+.group checkbox {
+  margin-right: 10PX;
+  transition: all 1s ease-out;
+  margin-bottom: 10PX;
 }

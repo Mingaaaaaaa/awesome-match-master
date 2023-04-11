@@ -1,11 +1,12 @@
 /* eslint-disable jsx-quotes */
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import {
   View,
   Text,
   Picker,
   Checkbox,
   CheckboxGroup,
+  PageContainer,
 } from "@tarojs/components";
 import Taro from "@tarojs/taro";
 import { formatDate } from "../../utils/index";
@@ -19,12 +20,75 @@ function Export() {
   const [remarks, setRemarks] = useState("");
   const [startTime, setStartTime] = useState(today);
   const [endTime, setEndTime] = useState(today);
-  const achievements = ["A", "B", "C"];
-  const [achievement, setAchievement] = useState(0);
-  const [selTag, setSelTag] = useState(0);
   const [inclusion, setInclusion] = useState(["4"]);
   const [order, setOrder] = useState(1);
   const orderName = ["按成就组排序", "按时间排序"];
+  const [show, setShow] = useState(false);
+  const selectObject = useRef<object>([]);
+  const selectTeamName = useRef("");
+  const [selteams, setSelTeams] = useState("无");
+  const [teams, setTeams] = useState([]);
+  const [isFold, setIsFold] = useState([]);
+  const [tags, setTags] = useState<Array<Array<object>>>([]);
+  const [selectIcon, setSelectIcon] = useState([]);
+  const [check, setCheck] = useState([]);
+  const [fresh, setFresh] = useState(false);
+
+  useEffect(() => {
+    Taro.getStorage({
+      key: "token",
+      success: (token) => {
+        Taro.request({
+          url: "http://124.222.4.79:3310/api/team/findTeamAll",
+          method: "GET",
+          header: { token: token.data },
+          success: (res1: any) => {
+            console.log(res1);
+            res1.data.data.map((item, index) => {
+              //console.log(item.id);
+              Taro.request({
+                url: "http://124.222.4.79:3310/api/label/findLabelByTeam",
+                method: "GET",
+                header: {
+                  token: token.data,
+                },
+                data: {
+                  team1_id: item.id,
+                },
+                success: (res2) => {
+                  //console.log(res2);
+                  setTeams(res1.data.data);
+                  setTags((pre) => {
+                    pre.push(res2.data.data);
+                    return pre;
+                  });
+                  let arrIndex = [];
+                  let checkIndex = [];
+                  let selectIconIndex = [];
+                  for (let i = 0; i < res1.data.data.length; i++) {
+                    arrIndex.push(true);
+                    checkIndex.push(false);
+                    selectIconIndex.push(" ");
+                  }
+                  console.log(selectIconIndex);
+                  setIsFold(arrIndex);
+                  setCheck(checkIndex);
+                  setSelectIcon(selectIconIndex);
+                },
+              });
+            });
+          },
+          fail: () => {
+            Taro.showToast({
+              title: "获取数据失败",
+              icon: "error",
+              duration: 2000,
+            });
+          },
+        });
+      },
+    });
+  }, []);
   const exportRecord = (
     name,
     remarks,
@@ -40,8 +104,6 @@ function Export() {
         Taro.getStorage({
           key: "token",
           success: (res1) => {
-            console.log(inclusion);
-
             Taro.request({
               url: "http://124.222.4.79:3310/api/record/findRecord",
               method: "GET",
@@ -54,14 +116,12 @@ function Export() {
                 teams: [],
               },
               success: (res2) => {
-                console.log(res2.data.data.current_data);
-                let choice = res2.data.data.current_data.map((item) => {
-                  return {
-                    team_id: item.team1,
-                    labels: [item.label],
-                  };
-                });
-               console.log(choice);
+                //console.log(res2.data.data.current_data);
+                let choice;
+                if (selectObject.current) {
+                  choice = selectObject.current.filter((i) => i);
+                }
+                //console.log(choice);
                 Taro.request({
                   url: "http://124.222.4.79:3310/api/export/intro",
                   method: "POST",
@@ -78,16 +138,19 @@ function Export() {
                     user_id: res.data,
                   },
                   success: (res3) => {
-                    console.log(res3.data.data);
-                    let data = res3.data.data.replace(/↵/g, "\n");
+                    //console.log(res3.data.data);
+                    let data = res3.data.data.replace(/↵/g, "<pre>");
                     Taro.showModal({
                       title: "复制到剪切板？",
-                      content: data,
-                      success: function (res) {
-                        if (res.confirm) {
-                          console.log("用户点击确定");
-                        } else if (res.cancel) {
-                          console.log("用户点击取消");
+                      content: res3.data.data,
+                      success: function (res4) {
+                        if (res4.confirm) {
+                          Taro.setClipboardData({
+                            data: data,
+                          });
+                          //console.log("用户点击确定");
+                        } else if (res4.cancel) {
+                          //console.log("用户点击取消");
                         }
                       },
                     });
@@ -100,6 +163,114 @@ function Export() {
       },
     });
   };
+  function getTagByTeam(name, index) {
+    if (tags[index]) {
+      return (
+        <View>
+          <View
+            id={index}
+            className="fold-icon"
+            onClick={(e) => {
+              console.log(e);
+              setIsFold((pre) => {
+                console.log(pre);
+                pre[index] = !isFold[index];
+                return pre;
+              });
+              setFresh(!fresh);
+            }}
+          ></View>
+          <View className="team-header">
+            <View className="team-name">{name}</View>
+            <View
+              id={index}
+              className="all-select"
+              style={
+                check[index]
+                  ? {
+                      backgroundImage: `url(../../assets/select.png)`,
+                    }
+                  : {}
+              }
+              onClick={(e) => {
+                if (!check[index]) {
+                  let labels = tags[index].map((item, index) => {
+                    return item.id;
+                  });
+                  selectObject.current[index] = {
+                    team_id: teams[index].id,
+                    labels: labels,
+                  };
+                  if (!selectTeamName.current.includes(teams[index].name)) {
+                    selectTeamName.current += teams[index].name + "、";
+                    //console.log(selectTeamName.current);
+                    setSelTeams(selectTeamName.current);
+                  }
+                } else {
+                  selectObject.current[index] = undefined;
+                  let str = teams[index].name + "、";
+                  let newName = selectTeamName.current.replace(str, " ");
+                  selectTeamName.current = newName;
+                  setSelTeams(newName);
+                }
+                console.log(selectObject.current);
+                console.log(selectTeamName.current);
+                setCheck((pre) => {
+                  pre[index] = !pre[index];
+                  return pre;
+                });
+                setFresh(!fresh);
+              }}
+            ></View>
+          </View>
+          <CheckboxGroup
+            className="group"
+            onChange={(e) => {
+              let labels = e.detail.value.map((i) => Number(i));
+              selectObject.current[index] = {
+                team_id: teams[index].id,
+                labels: labels,
+              };
+              if (!selectTeamName.current.includes(teams[index].name)) {
+                selectTeamName.current += teams[index].name + "、";
+                //console.log(selectTeamName.current);
+                setSelTeams(selectTeamName.current);
+              }
+              console.log(selectObject.current);
+            }}
+          >
+            {tags[index].map((item, index2) => {
+              if (index2 < 3) {
+                return (
+                  <Checkbox key={index2} checked={check[index]} value={item.id}>
+                    {item.name}
+                  </Checkbox>
+                );
+              } else {
+                console.log(check);
+                return (
+                  <Checkbox
+                    checked={check[index]}
+                    key={index2}
+                    value={item.id}
+                    style={
+                      isFold[index] ? { display: "none" } : { display: "block" }
+                    }
+                  >
+                    {item.name}
+                  </Checkbox>
+                );
+              }
+            })}
+          </CheckboxGroup>
+          <View
+            className="form-divide"
+            style={isFold[index] ? { marginTop: "10PX" } : {}}
+          ></View>
+        </View>
+      );
+    }
+  }
   return (
     <Fragment>
       <Text className="title">记忆导出</Text>
@@ -113,7 +284,7 @@ function Export() {
               range={["文字导出"]}
               value={0}
               onChange={(e) => {
-                console.log(e.currentTarget);
+                //console.log(e.currentTarget);
               }}
             >
               文字导出
@@ -158,20 +329,22 @@ function Export() {
         <View className="form-item">
           <Text className="form-label">成就组与标签选择</Text>
           <View className="form-inner">
-            <Picker
-              mode="multiSelector"
-              range={[
-                ["成就组1", "成就组2", "成就组3", "成就组4"],
-                ["标签1", "标签2", "标签3", "标签4"],
-              ]}
-              value={0}
-              onChange={(e) => {
-                console.log("成就组与标签选择");
-                console.log(e);
-              }}
+            <View onClick={() => setShow(true)}>已选成就组：{selteams}</View>
+            <PageContainer
+              show={show}
+              position="center"
+              onLeave={() => setShow(false)}
             >
-              选择要导出的记忆
-            </Picker>
+              <View style={{ textAlign: "center" }}>成就组与标签选择</View>
+              {teams.map((item, index) => {
+                if (!(tags[index] == undefined || !tags[index].length)) {
+                  return (
+                    <View key={index}>{getTagByTeam(item.name, index)}</View>
+                  );
+                }
+              })}
+            </PageContainer>
+
             <View className="form-icon"></View>
           </View>
           <View className="form-divide"></View>
@@ -180,8 +353,9 @@ function Export() {
           <Text className="form-label">格式选择</Text>
           <View className="form-inner tags">
             <CheckboxGroup
+              className="format"
               onChange={(e) => {
-                console.log(e);
+                //console.log(e);
                 setInclusion(e.detail.value);
               }}
             >
@@ -202,8 +376,8 @@ function Export() {
               range={orderName}
               value={order}
               onChange={(e) => {
-                console.log(e);
-                setOrder(e.detail.value);
+                //console.log(e);
+                setOrder(Number(e.detail.value));
               }}
             >
               {orderName[order]}
@@ -216,14 +390,14 @@ function Export() {
             className="form-btn"
             onClick={() => {
               exportRecord(name, remarks, startTime, endTime, inclusion, order);
-              console.log(
-                startTime,
-                endTime,
-                // achievement,
-                // selTag,
-                inclusion,
-                order
-              );
+              // //console.log(
+              //   startTime,
+              //   endTime,
+              //   // achievement,
+              //   // selTag,
+              //   inclusion,
+              //   order
+              // // );
             }}
           >
             导出

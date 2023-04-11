@@ -11,7 +11,7 @@
     width: 680rpx;
     height: 236rpx;
     background-color: white;
-    background-image: url("../../assets/user_bg.png");
+    background-image: url("../../assets/leaf.jpg");
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
@@ -29,10 +29,10 @@
         width: 116rpx;
         height: 116rpx;
         border-radius: 50%;
-        border: 1px #ff5678 solid;
+        border: 1px #ffffff solid;
         background-position: center;
         background-repeat: no-repeat;
-        background-size: 100% 100%;
+        background-size: cover;
       }
     }
   }
@@ -108,7 +108,8 @@
     border-radius: 50rpx;
     text-align: center;
     line-height: 100rpx;
-    background-color: #ff5678;
+    background: linear-gradient(135deg, rgba(255, 78, 84, 1) 0%, rgba(255, 117, 105, 1) 100%);
+    box-shadow: 0rpx 3rpx 10rpx 0rpx rgba(255, 80, 85, 0.6);
     color: white;
   }
 }

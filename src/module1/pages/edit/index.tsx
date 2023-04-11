@@ -2,7 +2,7 @@
 import { View } from "@tarojs/components";
 import { useEffect, useRef } from "react";
 import Taro from "@tarojs/taro";
-import TodoForm from "../../components/TodoForm/TodoForm";
+import TodoForm from "../../../components/TodoForm/TodoForm";
 
 function Edit() {
   const token = useRef();

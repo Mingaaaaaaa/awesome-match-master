@@ -17,6 +17,7 @@ function TodoForm(props: {
     time: "";
     teamId: null;
     tagId: null;
+    id: null;
   };
 }) {
   console.log(props);
@@ -34,16 +35,16 @@ function TodoForm(props: {
   const teams = useRef([]);
 
   const judgeMethod = () => {
-    console.log(teams);
-    console.log(teamIndex);
+    //console.log(teams);
+    //console.log(teamIndex);
     if (name && teams.current[teamIndex] && Tags[tagIndex] && ddl) {
-        props.method({
-          name: name,
-          labelId: Tags[tagIndex].id,
-          teamId: teams.current[teamIndex].id,
-          introduction: remarks ? remarks : "",
-          end_time: ddl,
-        });
+      props.method({
+        name: name,
+        labelId: Tags[tagIndex].id,
+        teamId: teams.current[teamIndex].id,
+        introduction: remarks ? remarks : "",
+        end_time: ddl,
+      });
       Taro.showToast({
         title: "操作成功",
         icon: "success",
@@ -60,9 +61,8 @@ function TodoForm(props: {
       });
     }
   };
-  const changeTeams = (Index,firstTime) => {
+  const changeTeams = (Index, firstTime) => {
     setTeamIndex(Number(Index));
-    console.log(teams.current[Number(Index)].id);
     Taro.request({
       url: "http://124.222.4.79:3310/api/label/findLabelByTeam",
       method: "GET",
@@ -91,13 +91,36 @@ function TodoForm(props: {
             data: {
               team1_id: props.data.teamId,
             },
-            success:(res)=>{
+            success: (res) => {
+              console.log(res);
               setTags(res.data.data);
-            }
+            },
           });
         }
       },
-      fail: (reason) => {},
+    });
+  };
+  const deleteRecord = () => {
+    Taro.getStorage({
+      key: "user_id",
+      success: (res) => {
+        Taro.request({
+          url: "http://124.222.4.79:3310/api/record/delRecord",
+          method: "GET",
+          header: { token: token.current },
+          data: { record_id: data.id, user_id: res.data },
+          success: (res1: any) => {
+            console.log(res1);
+            Taro.navigateBack();
+          },
+          fail: () => {
+            Taro.showModal({
+              title: "提示",
+              content: "删除失败",
+            });
+          },
+        });
+      },
     });
   };
   useEffect(() => {
@@ -111,13 +134,13 @@ function TodoForm(props: {
           method: "GET",
           header: { token: res.data },
           success: (res1: any) => {
-            console.log(res1);
+            //console.log(res1);
             teams.current = res1.data.data;
             setTeamNames(teams.current.map((i) => i.name));
             // teamNames.current= teams.current.map((i)=>i.name)
-            changeTeams(teams.current[0].id,true);
+            changeTeams(0, true);
             if (mode == "edit") {
-              console.log(teams.current);
+              //console.log(teams.current);
               teams.current.map((item, index) => {
                 if (item.id == props.data.teamId) {
                   setTeamIndex(index);
@@ -219,7 +242,7 @@ function TodoForm(props: {
               mode="selector"
               range={teamNames}
               onChange={(e) => {
-                changeTeams(e.detail.value,false);
+                changeTeams(e.detail.value, false);
               }}
             >
               {teamNames[teamIndex]}
@@ -227,6 +250,7 @@ function TodoForm(props: {
                 className="form-icon"
                 style={{
                   backgroundImage: `url(${featIcon})`,
+                  height: "50rpx",
                 }}
               ></View>
             </Picker>
@@ -258,7 +282,13 @@ function TodoForm(props: {
               })}
             </View>
           ) : (
-            <View>!!!该成就组下暂无标签~，换个看看</View>
+            <View
+              onClick={() =>
+                Taro.navigateTo({ url: "/module2/pages/achievements/index" })
+              }
+            >
+              暂无标签，点击管理
+            </View>
           )}
         </View>
         <View className="form-item">
@@ -266,12 +296,16 @@ function TodoForm(props: {
             className="form-btn"
             onClick={() => {
               judgeMethod();
-              console.log(name, remarks, ddl, teamIndex, tagIndex);
+              //console.log(name, remarks, ddl, teamIndex, tagIndex);
             }}
           >
             {mode === "add" ? "创建" : "修改"}
           </View>
-          {mode !== "add" ? <View className="form-del">删除任务</View> : null}
+          {mode !== "add" ? (
+            <View className="form-del" onClick={deleteRecord}>
+              删除
+            </View>
+          ) : null}
         </View>
       </View>
     </Fragment>

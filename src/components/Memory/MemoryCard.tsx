@@ -15,7 +15,7 @@ function MemoryCard(props) {
       key: "token",
       success: (res) => {
         Taro.request({
-          url: "http://124.222.4.79:3310/api/team/findTeamById",
+          url: "https://ysjy.alplune.top/yun/api/team/findTeamById",
           method: "GET",
           header: {
             token: res.data,
@@ -25,7 +25,7 @@ function MemoryCard(props) {
           },
           success: (res3) => {
             Taro.request({
-              url: "http://124.222.4.79:3310/api/label/detailLabel",
+              url: "https://ysjy.alplune.top/yun/api/label/detailLabel",
               method: "GET",
               header: {
                 token: res.data,

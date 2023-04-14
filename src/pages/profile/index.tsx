@@ -45,7 +45,7 @@ function Profile() {
             success: (res1) => {
               //console.log(res1.code);
               Taro.request({
-                url: "http://124.222.4.79:3310/api/user/login",
+                url: "https://ysjy.alplune.top/yun/api/user/login",
                 method: "POST",
                 data: {
                   code: res1.code,

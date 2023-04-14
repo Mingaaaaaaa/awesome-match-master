@@ -5,7 +5,9 @@ import { useEffect, useRef, useState } from "react";
 import "./index.scss";
 
 function Achievements() {
-  const [assets, setAssets] = useState([{ id: 0, name: "请输入成就组名称..." },]);
+  const [assets, setAssets] = useState([
+    { id: 0, name: "请输入成就组名称..." },
+  ]);
   const token = useRef("");
   const ids = useRef([0]);
   useEffect(() => {
@@ -15,7 +17,7 @@ function Achievements() {
         token.current = res.data;
         //2  find allteam
         Taro.request({
-          url: "http://124.222.4.79:3310/api/team/findTeamAll",
+          url: "https://ysjy.alplune.top/yun/api/team/findTeamAll",
           method: "GET",
           header: {
             token: res.data,
@@ -27,8 +29,8 @@ function Achievements() {
               ids.current = res1.data.data.map((i) => {
                 return i?.id;
               });
-            }else{
-              handleTeam("0", '请输入成就组名称...');
+            } else {
+              handleTeam("0", "请输入成就组名称...");
             }
           },
           fail: () => {
@@ -59,10 +61,10 @@ function Achievements() {
   const handleTeam = (id: string, name: string) => {
     //console.log(id + name);
     //console.log(ids);
-    if (!ids.current.includes(Number(id)) ||id==0) {
+    if (!ids.current.includes(Number(id)) || id == 0) {
       //1 addteam
       Taro.request({
-        url: "http://124.222.4.79:3310/api/team/addTeam",
+        url: "https://ysjy.alplune.top/yun/api/team/addTeam",
         method: "GET",
         header: {
           token: token.current,
@@ -89,7 +91,7 @@ function Achievements() {
     } else {
       //1 updateteam
       Taro.request({
-        url: "http://124.222.4.79:3310/api/team/updateTeam",
+        url: "https://ysjy.alplune.top/yun/api/team/updateTeam",
         method: "POST",
         header: {
           token: token.current,
@@ -125,7 +127,9 @@ function Achievements() {
             className="achieve"
             key={index}
             onClick={() => {
-              Taro.navigateTo({ url: `/module2/pages/tags/index?id=${item.id}` });
+              Taro.navigateTo({
+                url: `/module2/pages/tags/index?id=${item.id}`,
+              });
             }}
           >
             <Input

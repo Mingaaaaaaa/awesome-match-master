@@ -36,7 +36,7 @@ function Tags() {
       success: (res) => {
         token.current = res.data;
         Taro.request({
-          url: "http://124.222.4.79:3310/api/label/findLabelByTeam",
+          url: "https://ysjy.alplune.top/yun/api/label/findLabelByTeam",
           method: "GET",
           header: {
             token: res.data,
@@ -52,7 +52,7 @@ function Tags() {
 
         //3 findTeamById
         Taro.request({
-          url: "http://124.222.4.79:3310/api/team/findTeamById",
+          url: "https://ysjy.alplune.top/yun/api/team/findTeamById",
           method: "GET",
           header: {
             token: res.data,
@@ -70,7 +70,7 @@ function Tags() {
   const deleteTag = (deleIndex) => {
     //9
     Taro.request({
-      url: "http://124.222.4.79:3310/api/label/delLabel",
+      url: "https://ysjy.alplune.top/yun/api/label/delLabel",
       method: "GET",
       header: {
         token: token.current,
@@ -99,7 +99,7 @@ function Tags() {
       if (tags[index].id == -1) {
         // 5  add label
         Taro.request({
-          url: "http://124.222.4.79:3310/api/label/addLabel",
+          url: "https://ysjy.alplune.top/yun/api/label/addLabel",
           method: "GET",
           header: {
             token: token.current,
@@ -119,7 +119,7 @@ function Tags() {
       } else {
         // 6  update label
         Taro.request({
-          url: "http://124.222.4.79:3310/api/label/updateLabel",
+          url: "https://ysjy.alplune.top/yun/api/label/updateLabel",
           method: "POST",
           header: {
             token: token.current,
@@ -138,7 +138,7 @@ function Tags() {
   const handleTeam = (id: string, name: string) => {
     //1 updateteam
     Taro.request({
-      url: "http://124.222.4.79:3310/api/team/updateTeam",
+      url: "https://ysjy.alplune.top/yun/api/team/updateTeam",
       method: "POST",
       header: {
         token: token.current,
@@ -169,7 +169,7 @@ function Tags() {
     //console.log(tags);
     // 4  delTeam
     Taro.request({
-      url: "http://124.222.4.79:3310/api/team/delTeam",
+      url: "https://ysjy.alplune.top/yun/api/team/delTeam",
       method: "GET",
       header: {
         token: token.current,

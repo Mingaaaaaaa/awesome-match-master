@@ -64,7 +64,7 @@ function TodoForm(props: {
   const changeTeams = (Index, firstTime) => {
     setTeamIndex(Number(Index));
     Taro.request({
-      url: "http://124.222.4.79:3310/api/label/findLabelByTeam",
+      url: "https://ysjy.alplune.top/yun/api/label/findLabelByTeam",
       method: "GET",
       header: {
         token: token.current,
@@ -83,7 +83,7 @@ function TodoForm(props: {
             }
           });
           Taro.request({
-            url: "http://124.222.4.79:3310/api/label/findLabelByTeam",
+            url: "https://ysjy.alplune.top/yun/api/label/findLabelByTeam",
             method: "GET",
             header: {
               token: token.current,
@@ -105,7 +105,7 @@ function TodoForm(props: {
       key: "user_id",
       success: (res) => {
         Taro.request({
-          url: "http://124.222.4.79:3310/api/record/delRecord",
+          url: "https://ysjy.alplune.top/yun/api/record/delRecord",
           method: "GET",
           header: { token: token.current },
           data: { record_id: data.id, user_id: res.data },
@@ -130,7 +130,7 @@ function TodoForm(props: {
         token.current = res.data;
         //2  find allteam
         Taro.request({
-          url: "http://124.222.4.79:3310/api/team/findTeamAll",
+          url: "https://ysjy.alplune.top/yun/api/team/findTeamAll",
           method: "GET",
           header: { token: res.data },
           success: (res1: any) => {
@@ -152,10 +152,10 @@ function TodoForm(props: {
             Taro.showModal({
               title: "提示",
               content: "未找到成就组，请前往创建",
-              success: function (res) {
-                if (res.confirm) {
+              success: function (res1) {
+                if (res1.confirm) {
                   Taro.navigateTo({ url: "/pages/profile/index" });
-                } else if (res.cancel) {
+                } else if (res1.cancel) {
                   Taro.navigateBack();
                 }
               },

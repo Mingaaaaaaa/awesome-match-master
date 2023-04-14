@@ -7,14 +7,14 @@ import TodoForm from "../../../components/TodoForm/TodoForm";
 function Edit() {
   const token = useRef();
   const userId = useRef();
-  const data = Taro.useRouter().params
+  const data = Taro.useRouter().params;
   useEffect(() => {
     Taro.getStorage({
       key: "token",
       success: (res) => {
         token.current = res.data;
         // 获取所需修改表格的所有数据
-      }
+      },
     });
     Taro.getStorage({
       key: "user_id",
@@ -22,7 +22,7 @@ function Edit() {
         userId.current = res.data;
         // 获取所需修改表格的所有数据
       },
-  })}, []);
+    })}, []);
   var type;
   let routes = Taro.getCurrentPages();
   if (routes[0].route?.includes("todo")) {
@@ -39,7 +39,7 @@ function Edit() {
   }) => {
     //12
     Taro.request({
-      url: "http://124.222.4.79:3310/api/record/updateRecord",
+      url: "https://ysjy.alplune.top/yun/api/record/updateRecord",
       method: "POST",
       header: { token: token.current },
       data: {
@@ -49,7 +49,7 @@ function Edit() {
         introduction: props.introduction,
         end_time: props.end_time,
         state: 1,
-        user_id:userId.current
+        user_id: userId.current,
       },
       success: (res) => {
         result = res.data.data;
@@ -68,4 +68,4 @@ function Edit() {
     </View>
   );
 }
-export default Edit
+export default Edit;

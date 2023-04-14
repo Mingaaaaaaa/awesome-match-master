@@ -19,7 +19,7 @@ function Feedback() {
   const addFeedback = () => {
     //15
     Taro.request({
-      url: "http://124.222.4.79:3310/api/feedback/addFeedback",
+      url: "https://ysjy.alplune.top/yun/api/feedback/addFeedback",
       method: "POST",
       header: {
         token: token,
@@ -27,16 +27,16 @@ function Feedback() {
       data: {
         detail: feedback,
       },
-      success:(res)=>{
-        if(res.data.code==0){
+      success: (res) => {
+        if (res.data.code == 0) {
           Taro.showToast({
             title: res.data.data,
             icon: "success",
             duration: 700,
           });
         }
-        setFeedback("")
-      }
+        setFeedback("");
+      },
     });
   };
   return (

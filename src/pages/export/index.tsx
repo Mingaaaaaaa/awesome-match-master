@@ -39,7 +39,7 @@ function Export() {
       key: "token",
       success: (token) => {
         Taro.request({
-          url: "http://124.222.4.79:3310/api/team/findTeamAll",
+          url: "https://ysjy.alplune.top/yun/api/team/findTeamAll",
           method: "GET",
           header: { token: token.data },
           success: (res1: any) => {
@@ -47,7 +47,7 @@ function Export() {
             res1.data.data.map((item, index) => {
               //console.log(item.id);
               Taro.request({
-                url: "http://124.222.4.79:3310/api/label/findLabelByTeam",
+                url: "https://ysjy.alplune.top/yun/api/label/findLabelByTeam",
                 method: "GET",
                 header: {
                   token: token.data,
@@ -105,7 +105,7 @@ function Export() {
           key: "token",
           success: (res1) => {
             Taro.request({
-              url: "http://124.222.4.79:3310/api/record/findRecord",
+              url: "https://ysjy.alplune.top/yun/api/record/findRecord",
               method: "GET",
               header: { token: res1.data },
               data: {
@@ -123,7 +123,7 @@ function Export() {
                 }
                 //console.log(choice);
                 Taro.request({
-                  url: "http://124.222.4.79:3310/api/export/intro",
+                  url: "https://ysjy.alplune.top/yun/api/export/intro",
                   method: "POST",
                   header: {
                     token: res1.data,

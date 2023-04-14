@@ -30,7 +30,7 @@ function Add() {
   }) => {
     //11  根据时间判断是记忆还是代办
     Taro.request({
-      url: "http://124.222.4.79:3310/api/record/addRecord",
+      url: "https://ysjy.alplune.top/yun/api/record/addRecord",
       method: "POST",
       header: {
         token: token.current,

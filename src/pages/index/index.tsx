@@ -38,7 +38,7 @@ export default function Index() {
         token.current = res.data;
         //2  find allteam
         Taro.request({
-          url: "http://124.222.4.79:3310/api/team/findTeamAll",
+          url: "https://ysjy.alplune.top/yun/api/team/findTeamAll",
           method: "GET",
           header: { token: res.data },
           success: (res1: any) => {
@@ -77,7 +77,7 @@ export default function Index() {
   const getRecords = (page: number, size: number, teams: Array<number>) => {
     //8   find all records
     Taro.request({
-      url: "http://124.222.4.79:3310/api/record/findRecord",
+      url: "https://ysjy.alplune.top/yun/api/record/findRecord",
       method: "GET",
       header: { token: token.current },
       data: {

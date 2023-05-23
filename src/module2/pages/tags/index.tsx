@@ -194,6 +194,8 @@ function Tags() {
       <Input
         className="achieveName"
         value={teamName}
+        placeholder="请输入成就组名称……"
+        focus
         onBlur={(e) => {
           setTeamName(e.detail.value);
           handleTeam(teamId, e.detail.value);

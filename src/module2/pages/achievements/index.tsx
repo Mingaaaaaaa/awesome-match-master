@@ -6,7 +6,7 @@ import "./index.scss";
 
 function Achievements() {
   const [assets, setAssets] = useState([
-    { id: 0, name: "请输入成就组名称..." },
+    { id: 0, name: "成就组0" },
   ]);
   const token = useRef("");
   const ids = useRef([0]);
@@ -30,7 +30,7 @@ function Achievements() {
                 return i?.id;
               });
             } else {
-              handleTeam("0", "请输入成就组名称...");
+              handleTeam("0", "成就组0");
             }
           },
           fail: () => {
@@ -52,10 +52,10 @@ function Achievements() {
       console.log(pre);
       return [
         ...pre,
-        { id: assets[assets.length - 1].id + 1, name: "请输入成就组名称..." },
+        { id: assets[assets.length - 1].id + 1, name: `成就组${assets[assets.length - 1].id + 1}` },
       ];
     });
-    handleTeam(assets[assets.length - 1].id + 1, "请输入成就组名称...");
+    handleTeam(assets[assets.length - 1].id + 1, `成就组${assets[assets.length - 1].id + 1}`);
   };
 
   const handleTeam = (id: string, name: string) => {

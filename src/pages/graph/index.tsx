@@ -6,17 +6,18 @@ import "./index.scss";
 function Graph() {
   const [url, setUrl] = useState("");
   useEffect(() => {
-    Taro.getStorage({
-      key: "user_id",
-      success: (res) => {
-        setUrl(`http://124.222.4.79?id=${res.data}`);
-      },
-    });
+    // Taro.getStorage({
+    //   key: "user_id",
+    //   success: (res) => {
+    //     // setUrl(`https://ysjy.alplune.top/index.html`);
+    //     // setUrl(`https://ysjy.alplune.top/?id=${res.data}`);
+    //     setUrl("localhost:3000");
+    //     // setUrl("https://fancy-centaur-1c42ee.netlify.app");
+    //   }
+    // });
   }, []);
   return (
-    // <WebView src="http://localhost:3000/react-neovis-example?id=CALLdb.schema.visualization()"></WebView>
-    // <WebView src="http://192.168.43.206:3000/"></WebView>
-    <WebView src={url}></WebView>
+    <WebView src='https://ysjy.alplune.top'></WebView>
   );
 }
 
